@@ -78,7 +78,5 @@ public class Internet implements Serializable{
 	public void addPackage(Package pack) {
 		packages.add(pack);
 	}
-	
-	
 
 }
