@@ -87,8 +87,5 @@ public class OptionalProduct implements Serializable{
 		packages.add(pack);
 		pack.addOptionalProduct(this);
 	}
-	
-	
-	
 
 }

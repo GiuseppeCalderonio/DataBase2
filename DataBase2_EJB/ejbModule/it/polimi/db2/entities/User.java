@@ -9,12 +9,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "user")
+@NamedQuery(name = "User.checkCredentials",
+query = "SELECT u FROM User u  WHERE u.username = ?1 and u.password = ?2")
 public class User implements Serializable{
 	
 	@Id
@@ -30,7 +33,7 @@ public class User implements Serializable{
 	@OneToMany(fetch = FetchType.EAGER,
 			cascade = {CascadeType.REMOVE, CascadeType.MERGE},
 			mappedBy = "user")
-	@OrderBy("date DESC")
+	//@OrderBy("date DESC")
 	private Collection<Order> orders;
 
 	public int getUserid() {

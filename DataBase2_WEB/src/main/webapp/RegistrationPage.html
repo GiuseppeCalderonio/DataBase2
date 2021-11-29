@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>RegistrationPage</title>
+</head>
+<body>
+	<h1>Welcome to the Registration Form</h1>
+	
+	<form action="RegistrationServlet" method="POST">
+		Email: <input type="email" name = "email" required>
+		Username: <input type="text" name="username" required> <br>
+		Password: <input type="password" name="password" required><br>
+		<input type="submit" value="Register">
+		<p th:text=" ${errorMsg}"></p><br>
+	</form>
+
+</body>
+</html>

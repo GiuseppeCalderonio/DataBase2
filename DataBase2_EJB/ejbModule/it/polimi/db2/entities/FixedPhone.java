@@ -28,7 +28,7 @@ public class FixedPhone implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int serviceid;
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "internetServices")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "fixedPhoneServices")
 	private Collection<Package> packages;
 	
 	public Collection<Package> getPackages() {

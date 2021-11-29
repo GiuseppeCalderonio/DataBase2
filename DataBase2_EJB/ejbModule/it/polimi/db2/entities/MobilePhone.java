@@ -48,7 +48,7 @@ public class MobilePhone implements Serializable{
 	
 	
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "internetServices")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "mobilePhoneServices")
 	private Collection<Package> packages;
 	
 	

@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
-	<persistence-unit name="DataBase2_EJB">
+	<persistence-unit name="DataBase2_EJB" transaction-type="JTA">
+
+		<jta-data-source>DataBases2_EJB</jta-data-source>
+			
+			<class>it.polimi.db2.entities.FixedPhone</class>
+			<class>it.polimi.db2.entities.Internet</class>
+			<class>it.polimi.db2.entities.MobilePhone</class>
+			<class>it.polimi.db2.entities.OptionalProduct</class>
+			<class>it.polimi.db2.entities.Order</class>
+			<class>it.polimi.db2.entities.Package</class>
+			<class>it.polimi.db2.entities.User</class>
+			
+			<properties>
+			
+				<property name="eclipselink.logging.level" value="FINE"/>
+			
+			</properties>
+
 	</persistence-unit>
 </persistence>
