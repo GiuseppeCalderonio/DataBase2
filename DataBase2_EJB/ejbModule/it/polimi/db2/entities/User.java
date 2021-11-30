@@ -33,7 +33,7 @@ public class User implements Serializable{
 	@OneToMany(fetch = FetchType.EAGER,
 			cascade = {CascadeType.REMOVE, CascadeType.MERGE},
 			mappedBy = "user")
-	//@OrderBy("date DESC")
+	@OrderBy("date DESC")
 	private Collection<Order> orders;
 
 	public int getUserid() {

@@ -1,6 +1,7 @@
 package it.polimi.db2.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.ejb.EJB;
 import javax.persistence.PersistenceException;
@@ -9,9 +10,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import it.polimi.db2.HTMLhelper.HTMLPrinter;
 import it.polimi.db2.exceptions.CredentialsException;
 import it.polimi.db2.jee.stateless.UserManager;
 
@@ -38,8 +41,10 @@ public class RegistrationServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String path = getServletContext().getContextPath() + "/RegistrationPage.html";
-		response.sendRedirect(path);
+		//String path = getServletContext().getContextPath() + "/RegistrationPage.html";
+		//response.sendRedirect(path);
+		printPage("", response.getWriter());
+		
 	}
 
 	/**
@@ -62,21 +67,28 @@ public class RegistrationServlet extends HttpServlet {
 			
 		}catch(Exception e) {
 			e.printStackTrace();
-			doGet(request, response);
+			printPage(e.getMessage(), response.getWriter());
 			return;
 		}
 		try {
 			userManager.registerUser(usrn, pwd, email);
 		} catch (Exception e) {
 			e.printStackTrace();
-			doGet(request, response);
+			printPage("User with same username or password already exsisting", response.getWriter());
 			
 			return;
 		}	
 		
-		String path = getServletContext().getContextPath() + "/LoginPage.html";
-		response.sendRedirect(path);
+		printPage("Registration succesfully completed", response.getWriter());
 		
 	}
+	
+	private void printPage(String errorMessage, @NotNull PrintWriter out) {
+		
+		//response.sendRedirect(getServletContext().getContextPath() + "/LoginPage.html");
+		
+		new HTMLPrinter(out, "LandingPage").printLoginPage("", errorMessage);
+	}
+	
 
 }

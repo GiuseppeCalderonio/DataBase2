@@ -1,6 +1,9 @@
 package it.polimi.db2.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.persistence.NonUniqueResultException;
@@ -10,9 +13,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import it.polimi.db2.HTMLhelper.Form;
+import it.polimi.db2.HTMLhelper.FormInstance;
+import it.polimi.db2.HTMLhelper.HTMLPrinter;
 import it.polimi.db2.exceptions.CredentialsException;
 import it.polimi.db2.jee.stateless.UserManager;
 
@@ -40,9 +47,9 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		
-		response.sendRedirect(getServletContext().getContextPath() + "/LoginPage.html");
+		//response.sendRedirect(getServletContext().getContextPath() + "/LoginPage.html");
+		printPage("", response.getWriter());
 		
 	}
 
@@ -62,7 +69,7 @@ public class LoginServlet extends HttpServlet {
 
 		} catch (Exception e) {
 			// for debugging only e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
+			printPage(e.getMessage(), response.getWriter());
 			return;
 		}
 		Integer userId = null;
@@ -71,7 +78,8 @@ public class LoginServlet extends HttpServlet {
 			userId = userManager.checkCredentials(usrn, pwd);
 		} catch (CredentialsException | NonUniqueResultException e) {
 			e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not check credentials");
+			printPage(e.getMessage(), response.getWriter());
+			//response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not check credentials");
 			return;
 		}
 
@@ -81,8 +89,7 @@ public class LoginServlet extends HttpServlet {
 		String path;
 		if (userId == null) {
 			
-			path = getServletContext().getContextPath() + "/LoginPage.html";
-			response.sendRedirect(path);
+			printPage("The login failed, be sure to have insert the right username and password", response.getWriter());
 			
 			
 		} else {
@@ -91,5 +98,19 @@ public class LoginServlet extends HttpServlet {
 			response.sendRedirect(path);
 		}
 	}
+	
+	private void printPage(String errorMessage, @NotNull PrintWriter out) {
+		
+		//response.sendRedirect(getServletContext().getContextPath() + "/LoginPage.html");
+		
+		new HTMLPrinter(out, "LandingPage").printLoginPage(errorMessage, "");
+	}
+	
+	
+	
+	
+	
+	
+	
 
 }
