@@ -31,6 +31,9 @@ public class GoToHomePage extends HttpServlet {
 	@EJB(name = "it.polimi.db2.jee.stateless/PackageManager")
 	private PackageManager packageManager;
 	
+	@EJB(name = "it.polimi.db2.jee.stateless/UserManager")
+	private UserManager userManager;
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -44,8 +47,7 @@ public class GoToHomePage extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		
 		
 		List <Package> packages = new ArrayList<>();
 		try {
@@ -54,8 +56,19 @@ public class GoToHomePage extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		int userId;
+		String username;
+		
+		try {
+			userId = (int) request.getSession().getAttribute("userId");
+			username = userManager.findById(userId).getUsername();
+			
+		}catch(NullPointerException e) {
+			username = null;
+		}
 
-		printPage("", response.getWriter(), packages);
+		printPage("", response.getWriter(), packages, username);
 		
 	}
 
@@ -68,9 +81,9 @@ public class GoToHomePage extends HttpServlet {
 	}
 	
 	
-private void printPage(String errorMessage, @NotNull PrintWriter out, List<Package> packages) {
+	private void printPage(String errorMessage, @NotNull PrintWriter out, List<Package> packages, String username) {
 	
-		new HTMLPrinter(out, "HomePage").printHomePage(errorMessage, packages);
+		new HTMLPrinter(out, "HomePage").printHomePage(errorMessage, packages, username);
 	}
 	
 

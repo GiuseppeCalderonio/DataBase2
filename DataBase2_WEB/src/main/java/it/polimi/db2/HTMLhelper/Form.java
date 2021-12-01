@@ -32,17 +32,31 @@ public class Form {
 	 */
 	private String value;
 	
+	private String additional = "";
+	
 	
 	public Form(String action, String method, String errorMessage, List<FormInstance> formInstances, String value) {
 		this.action = action;
 		this.method = method;
-		this.formInstances = formInstances;
+		if(formInstances != null)
+			this.formInstances = formInstances;
 		this.errorMessage = errorMessage;
 		this.value = value;
 	}
 	
+	public Form(String action, String method, String errorMessage, List<FormInstance> formInstances, String value, String additional) {
+		this.action = action;
+		this.method = method;
+		if(formInstances != null)
+			this.formInstances = formInstances;
+		this.errorMessage = errorMessage;
+		this.value = value;
+		this.additional = additional;
+	}
+	
 	public String toString() {
 		String toReturn = "<form action=\"" + action + "\" method=\"" + method + "\">";
+		toReturn = toReturn + additional;
 		for(FormInstance i : formInstances) {	
 			toReturn = toReturn + i.toString();
 		}

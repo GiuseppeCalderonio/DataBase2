@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.persistence.NonUniqueResultException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -92,10 +93,15 @@ public class LoginServlet extends HttpServlet {
 			printPage("The login failed, be sure to have insert the right username and password", response.getWriter());
 			
 			
-		} else {
+		} else if(!userManager.findById(userId).isEmployee()){
+			
 			request.getSession().setAttribute("userId", userId);
 			path = getServletContext().getContextPath() + "/GoToHomePage";
 			response.sendRedirect(path);
+			
+		}
+		else {
+			// send to employee home page
 		}
 	}
 	

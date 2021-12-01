@@ -55,10 +55,15 @@ public class RegistrationServlet extends HttpServlet {
 		String usrn = null;
 		String pwd = null;
 		String email = null;
+		boolean isEmployee;
 		try {
 			usrn = StringEscapeUtils.escapeJava(request.getParameter("username"));
 			pwd = StringEscapeUtils.escapeJava(request.getParameter("password"));
 			email = StringEscapeUtils.escapeJava(request.getParameter("email"));
+			String temp = (request.getParameter("isEmployee"));
+			isEmployee = temp != null;
+			System.out.println("ATTENZIONE "+ isEmployee);
+			
 			
 			if (usrn == null || pwd == null || email == null ||
 					usrn.isEmpty() || pwd.isEmpty() || !email.contains("@")){
@@ -71,7 +76,7 @@ public class RegistrationServlet extends HttpServlet {
 			return;
 		}
 		try {
-			userManager.registerUser(usrn, pwd, email);
+			userManager.registerUser(usrn, pwd, email, isEmployee);
 		} catch (Exception e) {
 			e.printStackTrace();
 			printPage("User with same username or password already exsisting", response.getWriter());

@@ -52,11 +52,12 @@ public class UserManager {
 	 * @param email this is the mail to register
 	 * @throws CredentialsException
 	 */
-	public void registerUser(String usrn, String pwd, String email) throws CredentialsException {
+	public void registerUser(String usrn, String pwd, String email, boolean isEmployee) throws CredentialsException {
 		User user = new User();
 		user.setUsername(usrn);
 		user.setPassword(pwd);
 		user.setEmail(email);
+		user.setEmployee(isEmployee);
 		
 		try {
 			em.persist(user);

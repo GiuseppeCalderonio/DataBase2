@@ -1,7 +1,9 @@
 package it.polimi.db2.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,6 +19,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+
+import it.polimi.db2.Service;
 
 @Entity
 @Table(name = "package")
@@ -152,7 +156,54 @@ public class Package implements Serializable{
 	}
 	
 	public String toString() {
-		return getName();
 		
+		// general info
+		
+		String toReturn = "Name = " + name //print name
+				+ ", ID = " + packageid  //print id
+				+ ", Montly fee for 12 months " + fee12 + "$ " //print m fee for 12 months
+				+ ", Montly fee for 24 months " + fee24 + "$ " //print m fee for 24 months
+				+ ", Montly fee for 36 months " + fee36 + "$ " //print m fee for 36 months
+				+ "<br>";
+		
+		// print services offered
+		
+		toReturn = toReturn + "Services offered :";
+		
+		// gather services
+		
+		List<Service> servicesOffered = new ArrayList<>();
+		servicesOffered.addAll(fixedPhoneServices);
+		servicesOffered.addAll(internetServices);
+		servicesOffered.addAll(mobilePhoneServices);
+		
+		// print a list of services
+		
+		toReturn = toReturn + "<ul>";
+		
+		for(Service s : servicesOffered) {
+			toReturn = toReturn + "<li>" + s.toString() + "</li>";
+		}
+		
+		toReturn = toReturn + "</ul>";
+		
+		// print optional products
+		
+		toReturn = toReturn + "<br> Optional Products: ";
+		
+		// if there are no optional products
+		
+		if(optionalProducts.isEmpty())
+			return toReturn + "No";
+		
+		// print optional products
+		
+		toReturn = toReturn + "<ul>";
+		
+		for(OptionalProduct op : optionalProducts) {
+			toReturn = toReturn + "<li>" + op.toString() + "</li>";
+		}
+		
+		return toReturn + "</ul>";
 	}
 }

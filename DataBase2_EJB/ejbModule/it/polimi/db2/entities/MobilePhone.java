@@ -28,9 +28,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import it.polimi.db2.Service;
+
 @Entity
 @Table(name = "mobile_phone")
-public class MobilePhone implements Serializable{
+public class MobilePhone implements Serializable, Service{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -103,6 +105,19 @@ public class MobilePhone implements Serializable{
 
 	public void addPackage(Package pack) {
 		packages.add(pack);
+	}
+	
+	public String toString() {
+		String toReturn = "Mobile Phone:"
+				+ " ID = " + serviceid
+				+ ", Minutes =  " + minutes
+				+ ", SMSs = " + sms
+				+ ", Extra fees for minute = " + minutesExtraFee
+				+ ", Extra fees for SMS = " + smsExtraFee;
+		
+		
+		
+		return toReturn;
 	}
 
 }

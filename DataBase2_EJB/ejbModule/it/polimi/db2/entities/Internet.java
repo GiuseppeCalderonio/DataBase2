@@ -20,9 +20,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import it.polimi.db2.Service;
+
 @Entity
 @Table(name = "internet")
-public class Internet implements Serializable{
+public class Internet implements Serializable, Service{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,6 +79,17 @@ public class Internet implements Serializable{
 
 	public void addPackage(Package pack) {
 		packages.add(pack);
+	}
+	
+	public String toString() {
+		String toReturn = name + " Internet:"
+				+ " ID = " + serviceid
+				+ ", GB =  " + gigaBytes
+				+ ", Extra fees for GB = " + gigaBytesExtraFee;
+		
+		
+		
+		return toReturn;
 	}
 
 }

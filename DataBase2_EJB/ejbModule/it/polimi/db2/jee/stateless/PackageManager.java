@@ -38,6 +38,11 @@ public class PackageManager {
 		}
 	
 	}
+	
+	public Package getPackage(int packageId){
+		Package found = em.find(Package.class, packageId);
+		return found;
+	}
 
 
 }

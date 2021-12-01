@@ -20,9 +20,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import it.polimi.db2.Service;
+
 @Entity
 @Table(name = "fixed_phone")
-public class FixedPhone implements Serializable{
+public class FixedPhone implements Serializable, Service{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +39,14 @@ public class FixedPhone implements Serializable{
 
 	public void addPackage(Package pack) {
 		packages.add(pack);
+	}
+	
+	public String toString() {
+		String toReturn = "Fixed Phone: ID = " + serviceid;
+		
+		
+		
+		return toReturn;
 	}
 
 }
