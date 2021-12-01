@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,6 +30,15 @@ public class User implements Serializable{
 	private String password;
 	
 	private String email;
+	
+	@Column(name = "is_employee")
+	private boolean isEmployee;
+	
+	@Column(name = "is_insolvent")
+	private boolean isInsolvent;
+	
+	@Column(name = "failed_payments")
+	private int failedPayments;
 	
 	@OneToMany(fetch = FetchType.EAGER,
 			cascade = {CascadeType.REMOVE, CascadeType.MERGE},
@@ -68,6 +78,30 @@ public class User implements Serializable{
 		this.email = email;
 	}
 
+	public boolean isEmployee() {
+		return isEmployee;
+	}
+
+	public void setEmployee(boolean isEmployee) {
+		this.isEmployee = isEmployee;
+	}
+
+	public boolean isInsolvent() {
+		return isInsolvent;
+	}
+
+	public void setInsolvent(boolean isInsolvent) {
+		this.isInsolvent = isInsolvent;
+	}
+
+	public int getFailedPayments() {
+		return failedPayments;
+	}
+
+	public void setFailedPayments(int failedPayments) {
+		this.failedPayments = failedPayments;
+	}
+
 	public Collection<Order> getOrders() {
 		return orders;
 	}
@@ -79,5 +113,7 @@ public class User implements Serializable{
 	public void addOrder(Order order) {
 		this.orders.add(order);
 	}
+	
+	
 
 }

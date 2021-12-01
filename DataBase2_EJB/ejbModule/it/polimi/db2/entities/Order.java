@@ -85,6 +85,11 @@ public class Order implements Serializable{
 	@Column(name = "isvalid")
 	private boolean isValid;
 	
+	@Column(name = "validity_period")
+	private int validityPeriod;
+	
+	private int fee;
+	
 	/**
 	 * this attribute represents the optional products associated with the package,
 	 * it has an eager fetch type because in the majority of cases, fetching an order
@@ -158,6 +163,22 @@ public class Order implements Serializable{
 
 	public void setValid(boolean isValid) {
 		this.isValid = isValid;
+	}
+
+	public int getValidityPeriod() {
+		return validityPeriod;
+	}
+
+	public void setValidityPeriod(int validityPeriod) {
+		this.validityPeriod = validityPeriod;
+	}
+
+	public int getFee() {
+		return fee;
+	}
+
+	public void setFee(int fee) {
+		this.fee = fee;
 	}
 
 	public Collection<OptionalProduct> getOptionalProducts() {

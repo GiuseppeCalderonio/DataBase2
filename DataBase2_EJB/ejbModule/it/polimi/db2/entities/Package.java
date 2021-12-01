@@ -27,10 +27,11 @@ public class Package implements Serializable{
 	
 	private String name;
 	
-	@Column( name="validity_period")
-	private int validityPeriod;
+	private int fee12;
 	
-	private int fee;
+	private int fee24;
+	
+	private int fee36;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pack")
 	@OrderBy("date DESC")
@@ -76,20 +77,28 @@ public class Package implements Serializable{
 		this.name = name;
 	}
 
-	public int getValidityPeriod() {
-		return validityPeriod;
+	public int getFee12() {
+		return fee12;
 	}
 
-	public void setValidityPeriod(int validityPeriod) {
-		this.validityPeriod = validityPeriod;
+	public void setFee12(int fee12) {
+		this.fee12 = fee12;
+	}
+	
+	public int getFee24() {
+		return fee24;
 	}
 
-	public int getFee() {
-		return fee;
+	public void setFee24(int fee24) {
+		this.fee24 = fee24;
+	}
+	
+	public int getFee36() {
+		return fee36;
 	}
 
-	public void setFee(int fee) {
-		this.fee = fee;
+	public void setFee36(int fee36) {
+		this.fee36 = fee36;
 	}
 
 	public Collection<Order> getOrders() {
