@@ -37,7 +37,7 @@ public class User implements Serializable{
 	@Column(name = "is_insolvent")
 	private boolean isInsolvent;
 	
-	@Column(name = "failed_payments")
+	@Column(name = "insolvent_payments")
 	private int failedPayments;
 	
 	@OneToMany(fetch = FetchType.EAGER,

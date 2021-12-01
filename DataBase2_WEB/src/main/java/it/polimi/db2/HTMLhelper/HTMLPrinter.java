@@ -3,6 +3,8 @@ package it.polimi.db2.HTMLhelper;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import it.polimi.db2.entities.*;
+import it.polimi.db2.entities.Package;
 
 public class HTMLPrinter {
 	
@@ -43,6 +45,18 @@ public class HTMLPrinter {
 		out.println("</html>");
 		
 	}
+	
+	public void printHomePage(String homePageError, List<Package> packages) {
+		printHeader();
+		out.println("<body>");
+		out.println("<h1>here they are our packages, if you want to pursue an order press the button Buy Service </h1>");
+		for(Package p:packages) {
+			out.println(p.toString());
+		}
+		out.println("</body>");
+		out.println("</html>");
+	}
+	
 	
 	private void printHeader() {
 		out.println("<!DOCTYPE html>");

@@ -13,12 +13,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "package")
+@NamedQuery(name = "getPackages",
+query = "SELECT p FROM Package p")
 public class Package implements Serializable{
 	
 	@Id
@@ -147,5 +150,9 @@ public class Package implements Serializable{
 		this.internetServices.add(internetService);
 		internetService.addPackage(this);
 	}
-
+	
+	public String toString() {
+		return getName();
+		
+	}
 }
