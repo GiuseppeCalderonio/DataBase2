@@ -7,8 +7,6 @@ public class FormInstance {
 	private String name;
 	private String value = null;
 	private boolean isRequired = true;
-	private String realValue;
-	
 	public FormInstance(String nameDescriptor, String type, String name) {
 		this.nameDescriptor = nameDescriptor;
 		this.type = type;

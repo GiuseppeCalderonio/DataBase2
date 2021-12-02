@@ -57,13 +57,25 @@ public class RegistrationServlet extends HttpServlet {
 		String email = null;
 		boolean isEmployee;
 		try {
-			usrn = StringEscapeUtils.escapeJava(request.getParameter("username"));
-			pwd = StringEscapeUtils.escapeJava(request.getParameter("password"));
-			email = StringEscapeUtils.escapeJava(request.getParameter("email"));
-			String temp = (request.getParameter("isEmployee"));
-			isEmployee = temp != null;
-			System.out.println("ATTENZIONE "+ isEmployee);
+			// get the username chosen by the user
 			
+			usrn = StringEscapeUtils.escapeJava(request.getParameter("username"));
+			
+			// get the password chosen by the user
+			
+			pwd = StringEscapeUtils.escapeJava(request.getParameter("password"));
+			
+			// get the email chosen by the user
+			
+			email = StringEscapeUtils.escapeJava(request.getParameter("email"));
+			
+			// get the isEmployee flag chosen by the user
+			
+			String temp = (request.getParameter("isEmployee"));
+			
+			isEmployee = temp != null;
+			
+			// if the data sent are inherently wrong
 			
 			if (usrn == null || pwd == null || email == null ||
 					usrn.isEmpty() || pwd.isEmpty() || !email.contains("@")){
@@ -71,18 +83,29 @@ public class RegistrationServlet extends HttpServlet {
 			}
 			
 		}catch(Exception e) {
+			
+			// an error occured
+			
 			e.printStackTrace();
 			printPage(e.getMessage(), response.getWriter());
 			return;
 		}
 		try {
+			
+			// try to persist the user in the database
+			
 			userManager.registerUser(usrn, pwd, email, isEmployee);
 		} catch (Exception e) {
+			
+			// a error occurred, probably the user have chosen a password or an username already chosen by another one
+			
 			e.printStackTrace();
 			printPage("User with same username or password already exsisting", response.getWriter());
 			
 			return;
 		}	
+		
+		// notify the user that he registered successfully and redirect him to the login page again
 		
 		printPage("Registration succesfully completed", response.getWriter());
 		

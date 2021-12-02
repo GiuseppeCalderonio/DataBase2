@@ -48,27 +48,55 @@ public class GoToHomePage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		
 		List <Package> packages = new ArrayList<>();
+		
+		
 		try {
+			
+			// get all the packages available
+			
 			 packages = packageManager.getPackages();
 		} catch (PackagesNotFoundException e) {
-			// TODO Auto-generated catch block
+			
+			// something bad happened
+			
 			e.printStackTrace();
+			
+			printPage("Something bad happened: " + e.getMessage(), response.getWriter(), packages, null);
+			
 		}
 		
 		int userId;
 		String username;
 		
 		try {
+			
+			// get the user id associated with the user of this session IF exists
+			
 			userId = (int) request.getSession().getAttribute("userId");
+			
+			// get the username associated with the user of this session IF exists
+			
 			username = userManager.findById(userId).getUsername();
 			
 		}catch(NullPointerException e) {
+			
+			// the user didn't login
+			
 			username = null;
 		}
 
+		// print the home page, showing the packages and eventually the username
+		
 		printPage("", response.getWriter(), packages, username);
+		
+		// set the confirmation flag to false, it means that if the user goes to the login page, this page here will be the next one
+		
+		request.setAttribute("confirmationFlag", false);
+		
+		// from now there are two possible lists of session attributes
+		// 1) ["userId", "confirmationFlag"]
+		// 2) ["confirmationFlag"]
 		
 	}
 
@@ -76,7 +104,9 @@ public class GoToHomePage extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
+		// not used
+		
 		doGet(request, response);
 	}
 	

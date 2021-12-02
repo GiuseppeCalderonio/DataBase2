@@ -40,8 +40,11 @@ public class PackageManager {
 	}
 	
 	public Package getPackage(int packageId){
-		Package found = em.find(Package.class, packageId);
-		return found;
+		return em.find(Package.class, packageId);
+	}
+	
+	public OptionalProduct getOptionalProduct(String name) {
+		return em.find(OptionalProduct.class, name);
 	}
 
 

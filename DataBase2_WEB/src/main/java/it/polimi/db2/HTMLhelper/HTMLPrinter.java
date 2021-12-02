@@ -3,6 +3,7 @@ package it.polimi.db2.HTMLhelper;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import it.polimi.db2.entities.*;
 import it.polimi.db2.entities.Package;
@@ -19,12 +20,44 @@ public class HTMLPrinter {
 	
 	public void printLoginPage(String loginError, String registrationError) {
 		
+		// generate the form relative to the login
+		
+		Form loginForm = generateLoginForm(loginError);
+		
+		// generate the form for the registration
+		
+		Form registrationForm = generateRegistrationForm(registrationError);
+		
+		// generate the form for the home page redirect
+		
+		Form goToHomePage = generateHomePageForm();
+		
+		
+		printHeader();
+		out.println("<body>");
+		
+		out.println("<h1>Welcome to the Service Teleco Application</h1>");
+		out.println(loginForm.toString());
+		out.println("<h1> Registration Form</h1>");
+		out.println(registrationForm.toString());
+		out.println(goToHomePage.toString());
+		
+		out.println("</body>");
+		out.println("</html>");
+		
+	}
+	
+	private Form generateLoginForm(String error) {
+		
 		List<FormInstance> loginInstances = new ArrayList<>();
 		
 		loginInstances.add(new FormInstance("Username", "text", "username"));
 		loginInstances.add(new FormInstance("Password", "password", "pwd"));
 		
-		Form loginForm = new Form("LoginServlet", "POST", loginError, loginInstances, "login");
+		return new Form("LoginServlet", "POST", error, loginInstances, "login");
+	}
+	
+	private Form generateRegistrationForm(String error) {
 		
 		List<FormInstance> formInstances = new ArrayList<>();
 		
@@ -33,19 +66,13 @@ public class HTMLPrinter {
 		formInstances.add(new FormInstance("Password", "password", "password"));
 		formInstances.add(new FormInstance("Register as Employee","checkbox","isEmployee", false));
 		
-		Form registrationForm = new Form("RegistrationServlet", "POST", registrationError, formInstances, "registration");
+		return new Form("RegistrationServlet", "POST", error, formInstances, "registration");
 		
+	}
+	
+	private Form generateHomePageForm() {
 		
-		printHeader();
-		out.println("<body>");
-		out.println("<h1>Welcome to the Service Teleco Application</h1>");
-		out.println(loginForm.toString());
-		out.println("<h1> Registration Form</h1>");
-		out.println(registrationForm.toString());
-		
-		out.println("</body>");
-		out.println("</html>");
-		
+		return new Form("GoToHomePageServlet", "GET", "", new ArrayList<FormInstance>(), "Home Page");
 	}
 	
 	public void printHomePage(String homePageError, List<Package> packages, String username) {
@@ -116,7 +143,7 @@ public class HTMLPrinter {
 					+ "		    <option value=\"36\"> 36 Months</option>\r\n"
 					+ "		  </select>";
 			
-			formInstances.add(new FormInstance("Start date ","date","startDate"));
+			formInstances.add(new FormInstance("Start date(yyyy-mm-dd) ","date","startDate"));
 			
 			for(OptionalProduct op : packageChosen.getOptionalProducts()) {
 				formInstances.add(new FormInstance(op.toString() ,"checkbox",op.getName()));
@@ -127,47 +154,54 @@ public class HTMLPrinter {
 			out.print(buyPackage.toString());
 		}
 		
-		
-		/*
-		out.println("<body>");
-		out.println("<body>");
-		out.println("<body>");
-		out.println("<body>");
-		
-		
-		
-		
-		<form action="/action_page.php">
-		  <label for="validityPeriod">Choose a validity period:</label>
-		  <select name="validityPeriod" id="cars">
-		    <option value="12">12 Months</option>
-		    <option value="24">24 Months</option>
-		    <option value="36"> 36 Months</option>
-		  </select>
-		
-		
-		
-		for(Package p : packages) {
-			availablePackages.add(new FormInstance(p.getName() + "<br>", "radio", "packageId"));
-			availablePackages.add(new FormInstance());
-		}
-		
-		Form buyPackage = new Form("GoToConfirmation", "GET", "", availablePackages, "Confirm Payment");
-		out.print(buyPackage.toString());
-		out.println("<br>");
-		out.println(errorMessage);
-		*/
-		
+		out.println("<br>" + errorMessage);
 		out.println("</body>");
 		out.println("</html>");
 	}
 	
-	public void printConfirmationPage(String errorMessage, List<OptionalProduct> optionalProductChosen, Package packageChosen, Date startdate, int fee) {
+	public void printConfirmationPage(String errorMessage, Package packageChosen, int validityPeriod, List<OptionalProduct> optionalProductsChosen, Date startDate, boolean isLogged) {
 		printHeader();
 		out.println("<body>");
 		out.println("<h1> That's a recap of what you chose, check if all the data are correct </h1>");
 		
+		// print the package chosen
 		
+		out.println("<br>Package chosed details: " + packageChosen.toString());
+		out.println("<br>");
+		out.println("</body>");
+		out.println("</body>");
+		out.println("<ul>");
+		
+		// print all the optional products chosen
+		
+		for(OptionalProduct op : optionalProductsChosen) {
+			out.print("<li>");
+			out.println(op.toString());
+			out.print("</li>");
+		}
+		out.println("</ul>");
+		
+		// print the start date of the service
+		
+		out.println("<br>Service start date: " + startDate);
+		
+		// print the validityPeriod 
+		
+		out.println("<br>ValidityPeriod: " + validityPeriod);
+		
+		// print the forms to pay or the login page
+		
+		
+		if(isLogged) {
+			out.println(new Form("GoToConfirmationPage", "POST", "", 
+					new ArrayList<FormInstance>(Arrays.asList(new FormInstance("positive", "radio", "payment", "true"), new FormInstance("negative", "radio", "payment", "false")))
+					, "Payment"));
+		}
+		
+		else {
+			Form goToLogin = new Form("LoginServlet", "GET", "", null, "Login");
+			out.println(goToLogin.toString());
+		}
 		
 		out.println("</body>");
 		out.println("</html>");

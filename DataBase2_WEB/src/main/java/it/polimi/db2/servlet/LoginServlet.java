@@ -49,7 +49,7 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		//response.sendRedirect(getServletContext().getContextPath() + "/LoginPage.html");
+		// print the login standard page
 		printPage("", response.getWriter());
 		
 	}
@@ -62,25 +62,49 @@ public class LoginServlet extends HttpServlet {
 		String usrn = null;
 		String pwd = null;
 		try {
+			
+			// get the username chosen by the user
+			
 			usrn = StringEscapeUtils.escapeJava(request.getParameter("username"));
+			
+			// get the password chosen by the user
+			
 			pwd = StringEscapeUtils.escapeJava(request.getParameter("pwd"));
 			if (usrn == null || pwd == null || usrn.isEmpty() || pwd.isEmpty()) {
+				
+				// if the data sent are inherently wrong
+				
 				throw new Exception("Missing or empty credential value");
 			}
 
 		} catch (Exception e) {
-			// for debugging only e.printStackTrace();
+			
+			// print the page again showing the error
+			
 			printPage(e.getMessage(), response.getWriter());
 			return;
 		}
+		
+		// declare a variable for the userId
+		
 		Integer userId = null;
+		
+		
 		try {
-			// query db to authenticate for user
+			
+			// query the database to find the id associated with the user given the credentils
+			
 			userId = userManager.checkCredentials(usrn, pwd);
+			
 		} catch (CredentialsException | NonUniqueResultException e) {
+			
+			
 			e.printStackTrace();
+			
+			// print the page again showing the eventual error
+			
 			printPage(e.getMessage(), response.getWriter());
-			//response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not check credentials");
+			
 			return;
 		}
 
@@ -88,20 +112,36 @@ public class LoginServlet extends HttpServlet {
 		// show login page with error message
 
 		String path;
+		
+		// if the database hasn't found any user associated with the credentials
 		if (userId == null) {
+			
+			// print the page again showing the wrong credentials error
 			
 			printPage("The login failed, be sure to have insert the right username and password", response.getWriter());
 			
+		
+		} else if(userManager.findById(userId).isEmployee()){ // if the user is an employee
 			
-		} else if(!userManager.findById(userId).isEmployee()){
-			
-			request.getSession().setAttribute("userId", userId);
-			path = getServletContext().getContextPath() + "/GoToHomePage";
-			response.sendRedirect(path);
+			// send to employee home page
 			
 		}
-		else {
-			// send to employee home page
+		else { // else if the user found is not an employee
+			
+			// store the id of the user in the session attributes
+			
+			request.getSession().setAttribute("userId", userId);
+			
+			// get the next page name
+			
+			String nextPage = getNewPageName(request);
+						
+			// send the user to the next page according to the web login
+						
+			path = getServletContext().getContextPath() + nextPage;
+			response.sendRedirect(path);
+			
+			
 		}
 	}
 	
@@ -112,11 +152,19 @@ public class LoginServlet extends HttpServlet {
 		new HTMLPrinter(out, "LandingPage").printLoginPage(errorMessage, "");
 	}
 	
-	
-	
-	
-	
-	
-	
+	private String getNewPageName(HttpServletRequest request) {
+		
+		Object confirmationFlag = request.getSession().getAttribute("confirmationFlag");
+		
+		// if the request came from the confirmation page
+		
+		if(confirmationFlag != null && (boolean)confirmationFlag)
+			return "/GoToConfirmationPage";
+		
+		// else go default in the home page
+		
+		return "/GoToHomePage";
+		
+	}
 
 }
