@@ -1,6 +1,7 @@
 package it.polimi.db2.HTMLhelper;
 
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import it.polimi.db2.entities.*;
@@ -161,6 +162,16 @@ public class HTMLPrinter {
 		out.println("</html>");
 	}
 	
+	public void printConfirmationPage(String errorMessage, List<OptionalProduct> optionalProductChosen, Package packageChosen, Date startdate, int fee) {
+		printHeader();
+		out.println("<body>");
+		out.println("<h1> That's a recap of what you chose, check if all the data are correct </h1>");
+		
+		
+		
+		out.println("</body>");
+		out.println("</html>");
+	}
 	
 	private void printHeader() {
 		out.println("<!DOCTYPE html>");
