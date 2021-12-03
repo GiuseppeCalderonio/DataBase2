@@ -126,8 +126,14 @@ public class LoginServlet extends HttpServlet {
 			
 		
 		} else if(userManager.findById(userId).isEmployee()){ // if the user is an employee
-			
 			// send to employee home page
+			
+			// store the id of the user in the session attributes
+			request.getSession().setAttribute("userId", userId);
+			
+			// send the employee to the home page of the employee application
+			path = getServletContext().getContextPath() + "/GoToEmployeeHomePage";
+			response.sendRedirect(path);
 			
 		}
 		else { // else if the user found is not an employee

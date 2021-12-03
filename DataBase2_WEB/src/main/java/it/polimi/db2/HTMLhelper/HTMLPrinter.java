@@ -169,7 +169,7 @@ public class HTMLPrinter {
 		
 		// print the package chosen
 		
-		out.println("<br>Package chosed details: " + packageChosen.toString());
+		out.println("<br>Package chose details: " + packageChosen.toString());
 		out.println("<br>");
 		out.println("</body>");
 		out.println("</body>");
@@ -209,6 +209,38 @@ public class HTMLPrinter {
 			Form goToLogin = new Form("LoginServlet", "GET", "", null, "Login");
 			out.println(goToLogin.toString());
 		}
+		
+		out.println("</body>");
+		out.println("</html>");
+	}
+	
+	public void printEmployeeHomePage(String errorMessage, String username) {
+		printHeader();
+		out.println("<body>");
+		out.println("<h1>In this page you can create a package with the associated optional products or an optional product</h1>");
+		
+		out.println("Hi " + username + "<br>");
+		String toShow = "LogOut";
+		
+		Form goToLogin = new Form("LoginServlet", "GET", "", null, toShow);
+		out.println(goToLogin.toString() + "<br>");
+		
+		out.println("<b>Package creation form</b>" + "<br>");
+		
+		FormInstance packageName = new FormInstance("Name", "text", "name", true);
+		out.println(packageName.toString());
+		
+
+		String serviceOptions = "<label for=\"service\">Choose a service:</label>\r\n"
+				+ "		  <select name=\"service\">\r\n"
+				+ "		    <option value=\"Mobile phone\">Mobile phone</option>\r\n"
+				+ "		    <option value=\"Fixed phone\">Fixed phone</option>\r\n"
+				+ "		    <option value=\"Internet\"> Internet</option>\r\n"
+				+ "		  </select>";
+		out.println(serviceOptions);
+		
+		
+		
 		
 		out.println("</body>");
 		out.println("</html>");
