@@ -72,7 +72,7 @@ public class HTMLPrinter {
 	
 	private Form generateHomePageForm() {
 		
-		return new Form("GoToHomePageServlet", "GET", "", new ArrayList<FormInstance>(), "Home Page");
+		return new Form("GoToHomePage", "GET", "", new ArrayList<FormInstance>(), "Home Page");
 	}
 	
 	public void printHomePage(String homePageError, List<Package> packages, String username) {
@@ -80,17 +80,20 @@ public class HTMLPrinter {
 		out.println("<body>");
 		out.println("<h1>here they are our packages, if you want to pursue an order press the button Buy Service </h1>");
 		
-		// user logged in
 		
-		if(username != null) 
+		
+		String toShow = "Login";
+		
+		if(username != null) { // user logged in
 			out.println("Hi " + username + "<br>");
-		
-		// user not logged in yet
-		
-		else {
-			Form goToLogin = new Form("LoginServlet", "GET", "", null, "Login");
-			out.println(goToLogin.toString());
+			toShow = "LogOut";
 		}
+			
+		// Login and Logout basically do the same thing, they just display a different user
+		// interface button to do it
+		
+		Form goToLogin = new Form("LoginServlet", "GET", "", null, toShow);
+		out.println(goToLogin.toString());
 		
 		// print a form to buy a service package
 		
@@ -189,6 +192,10 @@ public class HTMLPrinter {
 		
 		out.println("<br>ValidityPeriod: " + validityPeriod);
 		
+		// print the total amount of money to be pre-paid
+		
+		out.println("<br>Amount to be pre-paid: " + getAmountToBePrePaid(packageChosen, validityPeriod, optionalProductsChosen));
+		
 		// print the forms to pay or the login page
 		
 		
@@ -214,6 +221,17 @@ public class HTMLPrinter {
 		out.println("<meta charset=\"ISO-8859-1\">");
 		out.println("<title>" + title + "</title>");
 		out.println("</head>");
+	}
+	
+	private int getAmountToBePrePaid(Package packageChosen, int validityPeriod, List<OptionalProduct> optionalProducts) {
+		int amount = 0;
+		amount = amount + packageChosen.getFee(validityPeriod);
+		for(OptionalProduct op : optionalProducts) {
+			amount = amount + op.getFee();
+		}
+		
+		return amount * validityPeriod;
+		
 	}
 	
 

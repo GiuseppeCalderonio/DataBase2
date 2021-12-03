@@ -3,6 +3,7 @@ package it.polimi.db2.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,10 @@ import javax.validation.constraints.NotNull;
 import it.polimi.db2.HTMLhelper.HTMLPrinter;
 import it.polimi.db2.entities.OptionalProduct;
 import it.polimi.db2.entities.Package;
+import it.polimi.db2.entities.User;
+import it.polimi.db2.exceptions.OrderException;
+import it.polimi.db2.exceptions.PackagesNotFoundException;
+import it.polimi.db2.jee.stateless.OrderManager;
 import it.polimi.db2.jee.stateless.PackageManager;
 import it.polimi.db2.jee.stateless.UserManager;
 
@@ -32,6 +37,9 @@ public class GoToConfirmationPage extends HttpServlet {
 	
 	@EJB(name = "it.polimi.db2.jee.stateless/UserManager")
 	private UserManager userManager;
+	
+	@EJB(name = "it.polimi.db2.jee.stateless/OrderManager")
+	private OrderManager orderManager;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -62,7 +70,7 @@ public class GoToConfirmationPage extends HttpServlet {
 			
 			packageChosen = packageManager.getPackage( (int) request.getSession().getAttribute("packageid"));
 			
-			// get the fee chosen by the user
+			// get the validity period chosen by the user
 			
 			validityPeriod = (int)request.getSession().getAttribute("validityPeriod");
 			
@@ -70,7 +78,7 @@ public class GoToConfirmationPage extends HttpServlet {
 			
 			startDate = (Date) request.getSession().getAttribute("startDate");
 			
-			// get the optional Product chosen
+			// get the optional Products chosen
 			
 			List<String> optionalPorductsNames = (List<String>) request.getSession().getAttribute("optionalProductsChosen");
 			optionalProductsChosen = optionalPorductsNames.stream().map(opName -> packageManager.getOptionalProduct(opName)).toList();
@@ -107,7 +115,59 @@ public class GoToConfirmationPage extends HttpServlet {
 		
 		// to verify if the payment is positive or negative use request.getParameter("payment") that can be the string "true" or "false"
 		
-		doGet(request, response);
+		String errorMessage = "";
+		
+		// ASSUMPTION: buy button won't never show if the user is not logged in, so this is always different from zero, and a user can't delete his account
+		
+		User user = userManager.findById((int)request.getSession().getAttribute("userId"));
+		
+		try {
+			
+			// get the package chosen by the user (we assume that if the user has arrived here it is because he have already selected the package)
+			
+			Package pack = packageManager.getPackage( (int) request.getSession().getAttribute("packageid"));
+			
+			// get the optional Products chosen
+			
+			List<String> optionalPorductsNames = (List<String>) request.getSession().getAttribute("optionalProductsChosen");
+			List<OptionalProduct> optionalProducts = optionalPorductsNames.stream().map(opName -> packageManager.getOptionalProduct(opName)).toList();
+			
+			// get the startDate
+			
+			Date startDate = (Date) request.getSession().getAttribute("startDate");
+			
+			// get the validity of the payment [positive or negative]
+			
+			String validity = request.getParameter("payment");
+			boolean isValid = validity.equals("true");
+			
+			// get the validity period chosen by the user
+			
+			int validityPeriod = (int)request.getSession().getAttribute("validityPeriod");
+			
+			orderManager.createOrder(user, pack, optionalProducts, startDate, isValid, validityPeriod);
+			
+			deleteAttributes(request);
+			
+		} catch (ParseException | OrderException e) {
+			
+			errorMessage = e.getMessage();
+			
+			try {
+				
+				new HTMLPrinter(response.getWriter(), "HomePage").printHomePage(errorMessage, packageManager.getPackages(), user.getUsername());
+				
+			} catch (IOException | PackagesNotFoundException e1) {
+				
+				// problem
+				
+				e1.printStackTrace();
+				
+			}
+		}
+		
+		String path = getServletContext().getContextPath() + "/GoToHomePage";
+		response.sendRedirect(path);
 	}
 	
 	
@@ -116,6 +176,18 @@ public class GoToConfirmationPage extends HttpServlet {
 		
 		new HTMLPrinter(out, "ConfirmationPage").printConfirmationPage(errorMessage, packageChosen, validityPeriod, optionalProductsChosen , startDate, isLogged);
 		
+	}
+	
+	private void deleteAttributes(HttpServletRequest request) {
+		
+		// ["userId", "confirmationFlag", "packageid", "validityPeriod", "startDate", "optionalProductsChosen"]
+		
+		request.getSession().removeAttribute("packageid");
+		request.getSession().removeAttribute("validityPeriod");
+		request.getSession().removeAttribute("startDate");
+		request.getSession().removeAttribute("optionalProductsChosen");
+		
+		// ["userId", "confirmationFlag"]
 	}
 
 }

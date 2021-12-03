@@ -49,6 +49,10 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		// delete if exists the attribute relative to the user login
+		
+		request.getSession().removeAttribute("userId");
+		
 		// print the login standard page
 		printPage("", response.getWriter());
 		

@@ -206,4 +206,12 @@ public class Package implements Serializable{
 		
 		return toReturn + "</ul>";
 	}
+	
+	public int getFee(int validityPeriod) {
+		if(validityPeriod == 12)
+			return fee12;
+		if (validityPeriod == 24)
+			return fee24;
+		return fee36;
+	}
 }

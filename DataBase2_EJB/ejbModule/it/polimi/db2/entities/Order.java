@@ -45,7 +45,7 @@ public class Order implements Serializable{
 	 * it also upload the user adding it to his list of orders, so it should
 	 * be updated as well
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userid")
 	private User user;
 	
@@ -56,7 +56,7 @@ public class Order implements Serializable{
 	 * it also upload the package adding it to its list of orders that use it,
 	 *  so it should be updated as well  
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "packageid")
 	private Package pack;
 	
@@ -99,7 +99,7 @@ public class Order implements Serializable{
 	 * the collections of the optional products holding a reference to all the orders
 	 * which use it
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "orders", cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "orders")
 	private Collection<OptionalProduct> optionalProducts;
 
 	public int getOrderid() {
@@ -124,11 +124,11 @@ public class Order implements Serializable{
 		user.addOrder(this);
 	}
 
-	public Package getPack() {
+	public Package getPackage() {
 		return pack;
 	}
 	
-	public void setPack(Package pack) {
+	public void setPackage(Package pack) {
 		this.pack = pack;
 		pack.addOrder(this);
 	}
@@ -190,6 +190,21 @@ public class Order implements Serializable{
 		for(OptionalProduct op : optionalProducts) {
 			op.addOrder(this);
 		}
+	}
+	
+	/**
+	 * this method returns the total amount of money provided by this order
+	 * computed as (package fee[current validity period] * number of months) + (optional products fee * validity period)
+	 * @return the total value of the order in terms of money
+	 */
+	public int getTotalValue() {
+		int totalValue = 0;
+		totalValue = totalValue + fee;
+		for(OptionalProduct op : optionalProducts) {
+			totalValue = totalValue + op.getFee();
+		}
+		
+		return totalValue * validityPeriod;
 	}
 
 }
