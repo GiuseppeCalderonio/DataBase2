@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import it.polimi.db2.entities.*;
 import it.polimi.db2.entities.Package;
+import it.polimi.db2.Creation;
 
 public class HTMLPrinter {
 	
@@ -214,7 +215,7 @@ public class HTMLPrinter {
 		out.println("</html>");
 	}
 	
-	public void printEmployeeHomePage(String errorMessage, String username) {
+	public void printEmployeeHomePage(String errorMessage, String username, Creation toCreate) {
 		printHeader();
 		out.println("<body>");
 		out.println("<h1>In this page you can create a package with the associated optional products or an optional product</h1>");
@@ -225,7 +226,25 @@ public class HTMLPrinter {
 		Form goToLogin = new Form("LoginServlet", "GET", "", null, toShow);
 		out.println(goToLogin.toString() + "<br>");
 		
-		out.println("<b>Package creation form</b>" + "<br>");
+		if(toCreate==null) {
+		/*Form createPackage = new Form("GoToEmployeeHomePage", "GET", "", null, "Create a Package");
+		out.println(createPackage.toString() + "<br>");*/
+		
+		out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
+		String creationOptions = "<label for=\"toCreate\">Choose what you want to create:</label>\r\n"
+				+ "		  <select name=\"toCreate\">\r\n"
+				+ "		    <option value=\"PACKAGE\">Package</option>\r\n"
+				+ "		    <option value=\"OPTIONALPRODUCT\">Optional Product</option>\r\n"
+				+ "		  </select>";
+		out.println(creationOptions);
+		out.println("<input type=\"submit\" value=\"Submit\">");
+		out.println("</form>");
+		
+		}
+		
+		else
+			out.println("works");
+		/*out.println("<b>Package creation form</b>" + "<br>");
 		
 		FormInstance packageName = new FormInstance("Name", "text", "name", true);
 		out.println(packageName.toString());
@@ -237,7 +256,7 @@ public class HTMLPrinter {
 				+ "		    <option value=\"Fixed phone\">Fixed phone</option>\r\n"
 				+ "		    <option value=\"Internet\"> Internet</option>\r\n"
 				+ "		  </select>";
-		out.println(serviceOptions);
+		out.println(serviceOptions);*/
 		
 		
 		

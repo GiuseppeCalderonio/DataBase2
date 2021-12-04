@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
+import it.polimi.db2.Creation;
 import it.polimi.db2.HTMLhelper.HTMLPrinter;
 import it.polimi.db2.entities.Package;
 import it.polimi.db2.jee.stateless.UserManager;
@@ -63,10 +64,31 @@ public class GoToEmployeeHomePage extends HttpServlet {
 			
 			String path = getServletContext().getContextPath() + "/LoginServlet";
 			response.sendRedirect(path);
-			
 		}
 		
-		printPage("", response.getWriter(), username);
+		Creation toCreate = null;
+		
+		try {
+			if  (request.getParameter("toCreate").equals("PACKAGE")) {
+				toCreate = Creation.PACKAGE;
+				System.out.println(toCreate);
+			}
+			else {
+				if (request.getParameter("toCreate").equals("OPTIONALPRODUCT")) {
+					toCreate = Creation.OPTIONALPRODUCT;
+					System.out.println(toCreate);
+					}
+				else {
+					toCreate=null;
+					System.out.println(toCreate);
+				}
+					
+			}
+		} catch (NullPointerException e) {
+			toCreate=null;
+		}
+		
+		printPage("", response.getWriter(), username, toCreate);
 		
 	}
 
@@ -79,9 +101,9 @@ public class GoToEmployeeHomePage extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private void printPage(String errorMessage, @NotNull PrintWriter out, String username) {
+	private void printPage(String errorMessage, @NotNull PrintWriter out, String username, Creation toCreate) {
 		
-		new HTMLPrinter(out, "EmployeeHomePage").printEmployeeHomePage(errorMessage, username);
+		new HTMLPrinter(out, "EmployeeHomePage").printEmployeeHomePage(errorMessage, username, toCreate);
 	}
 
 }
