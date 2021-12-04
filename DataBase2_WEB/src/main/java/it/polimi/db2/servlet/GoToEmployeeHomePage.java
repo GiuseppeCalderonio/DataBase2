@@ -69,23 +69,15 @@ public class GoToEmployeeHomePage extends HttpServlet {
 		Creation toCreate = null;
 		
 		try {
-			if  (request.getParameter("toCreate").equals("PACKAGE")) {
+			if  (request.getParameter("toCreate").equals("PACKAGE")) 
 				toCreate = Creation.PACKAGE;
-				System.out.println(toCreate);
-			}
-			else {
-				if (request.getParameter("toCreate").equals("OPTIONALPRODUCT")) {
+				
+			else 
+				if (request.getParameter("toCreate").equals("OPTIONALPRODUCT")) 
 					toCreate = Creation.OPTIONALPRODUCT;
-					System.out.println(toCreate);
-					}
-				else {
-					toCreate=null;
-					System.out.println(toCreate);
-				}
-					
-			}
+			
 		} catch (NullPointerException e) {
-			toCreate=null;
+			
 		}
 		
 		printPage("", response.getWriter(), username, toCreate);

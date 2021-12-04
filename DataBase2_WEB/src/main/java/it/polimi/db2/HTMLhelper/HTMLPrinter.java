@@ -227,8 +227,6 @@ public class HTMLPrinter {
 		out.println(goToLogin.toString() + "<br>");
 		
 		if(toCreate==null) {
-		/*Form createPackage = new Form("GoToEmployeeHomePage", "GET", "", null, "Create a Package");
-		out.println(createPackage.toString() + "<br>");*/
 		
 		out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
 		String creationOptions = "<label for=\"toCreate\">Choose what you want to create:</label>\r\n"
@@ -242,8 +240,32 @@ public class HTMLPrinter {
 		
 		}
 		
-		else
-			out.println("works");
+		else {
+			if (toCreate.equals(Creation.OPTIONALPRODUCT)) {
+			
+				out.println("<b> Optional product creation <br> </b>");
+				
+				/*FormInstance optionalProductName = new FormInstance("Name", "text", "name", true);
+				out.println(optionalProductName.toString());
+				
+				FormInstance optionalProductFee = new FormInstance("Fee", "float", "name", true);
+				out.println(optionalProductFee.toString());
+				
+				out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
+				out.println("<input type=\"submit\" value=\"Submit\">");
+				out.println("</form>");*/
+				
+				
+				List<FormInstance> optionalProductInstances = new ArrayList<>();
+				
+				optionalProductInstances.add(new FormInstance("Name", "text", "name", true));
+				optionalProductInstances.add(new FormInstance("Fee", "float", "name", true));
+				
+				Form optionalProductForm = new Form("GoToEmployeeHomePage", "POST", "", optionalProductInstances, "create");
+				out.println(optionalProductForm.toString());
+			}
+		}
+			
 		/*out.println("<b>Package creation form</b>" + "<br>");
 		
 		FormInstance packageName = new FormInstance("Name", "text", "name", true);
