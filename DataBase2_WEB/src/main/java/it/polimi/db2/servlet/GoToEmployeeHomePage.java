@@ -58,6 +58,12 @@ public class GoToEmployeeHomePage extends HttpServlet {
 			// the user didn't login
 			
 			username = null;
+			
+			// redirect the user to the login page (if not logged, he cannot access this page)
+			
+			String path = getServletContext().getContextPath() + "/LoginServlet";
+			response.sendRedirect(path);
+			
 		}
 		
 		printPage("", response.getWriter(), username);
