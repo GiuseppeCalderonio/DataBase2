@@ -226,59 +226,85 @@ public class HTMLPrinter {
 		Form goToLogin = new Form("LoginServlet", "GET", "", null, toShow);
 		out.println(goToLogin.toString() + "<br>");
 		
-		if(toCreate==null) {
+		try {
 		
-		out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
-		String creationOptions = "<label for=\"toCreate\">Choose what you want to create:</label>\r\n"
-				+ "		  <select name=\"toCreate\">\r\n"
-				+ "		    <option value=\"PACKAGE\">Package</option>\r\n"
-				+ "		    <option value=\"OPTIONALPRODUCT\">Optional Product</option>\r\n"
-				+ "		  </select>";
-		out.println(creationOptions);
-		out.println("<input type=\"submit\" value=\"Submit\">");
-		out.println("</form>");
-		
-		}
-		
-		else {
-			if (toCreate.equals(Creation.OPTIONALPRODUCT)) {
+			switch(toCreate) {
 			
+			case OPTIONALPRODUCT:
 				out.println("<b> Optional product creation <br> </b>");
-				
-				/*FormInstance optionalProductName = new FormInstance("Name", "text", "name", true);
-				out.println(optionalProductName.toString());
-				
-				FormInstance optionalProductFee = new FormInstance("Fee", "float", "name", true);
-				out.println(optionalProductFee.toString());
-				
-				out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
-				out.println("<input type=\"submit\" value=\"Submit\">");
-				out.println("</form>");*/
-				
 				
 				List<FormInstance> optionalProductInstances = new ArrayList<>();
 				
 				optionalProductInstances.add(new FormInstance("Name", "text", "name", true));
-				optionalProductInstances.add(new FormInstance("Fee", "float", "name", true));
+				optionalProductInstances.add(new FormInstance("Fee", "float", "fee", true));
 				
 				Form optionalProductForm = new Form("GoToEmployeeHomePage", "POST", "", optionalProductInstances, "create");
 				out.println(optionalProductForm.toString());
-			}
-		}
+				//TODO check if fee is a number
+				break;
 			
-		/*out.println("<b>Package creation form</b>" + "<br>");
+			case PACKAGE:
+				break;
+				
+			case MOBILEPHONE:
+				out.println("<b> Mobile phone service creation <br> </b>");
+				
+				List<FormInstance> mobilePhoneInstances = new ArrayList<>();
+				
+				mobilePhoneInstances.add(new FormInstance("Minutes", "int", "minutes", true));
+				mobilePhoneInstances.add(new FormInstance("SMS", "int", "sms", true));
+				mobilePhoneInstances.add(new FormInstance("Fee extra SMS", "float", "sms", true));
+				
+				Form mobilePhoneForm = new Form("GoToEmployeeHomePage", "POST", "", mobilePhoneInstances, "create");
+				out.println(mobilePhoneForm.toString());
+				//TODO check are numbers
+				break;
+				
+			case MOBILEINTERNET:
+				out.println("<b> Mobile internet service creation <br> </b>");
+				
+				List<FormInstance> mobileInternetInstances = new ArrayList<>();
+				
+				mobileInternetInstances.add(new FormInstance("GB", "int", "GIGA", true));
+				mobileInternetInstances.add(new FormInstance("Fee extra GB", "float", "fee extra GB", true));
+				
+				Form mobileInternetForm = new Form("GoToEmployeeHomePage", "POST", "", mobileInternetInstances, "create");
+				out.println(mobileInternetForm.toString());
+				//TODO check are numbers
+				break;
+				
+			case FIXEDINTERNET:
+				out.println("<b> Fixed internet service creation <br> </b>");
+				
+				List<FormInstance> fixedInternetInstances = new ArrayList<>();
+				
+				fixedInternetInstances.add(new FormInstance("GB", "int", "GIGA", true));
+				fixedInternetInstances.add(new FormInstance("Fee extra GB", "float", "fee extra GB", true));
+				
+				Form fixedInternetForm = new Form("GoToEmployeeHomePage", "POST", "", fixedInternetInstances, "create");
+				out.println(fixedInternetForm.toString());
+				//TODO check are numbers
+				break;
+				
+			default:
+				break;
+			}
 		
-		FormInstance packageName = new FormInstance("Name", "text", "name", true);
-		out.println(packageName.toString());
+		} catch (NullPointerException e) {
+			out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
+			String creationOptions = "<label for=\"toCreate\">Choose what you want to create:</label>\r\n"
+					+ "		  <select name=\"toCreate\">\r\n"
+					+ "		    <option value=\"PACKAGE\">Package</option>\r\n"
+					+ "		    <option value=\"OPTIONALPRODUCT\">Optional Product</option>\r\n"
+					+ "		    <option value=\"MOBILEPHONE\">Mobile phone service</option>\r\n"
+					+ "		    <option value=\"FIXEDINTERNET\">Fixed internet service</option>\r\n"
+					+ "		    <option value=\"MOBILEINTERNET\">Mobile internet service</option>\r\n"
+					+ "		  </select>";
+			out.println(creationOptions);
+			out.println("<input type=\"submit\" value=\"Submit\">");
+			out.println("</form>");
+		}
 		
-
-		String serviceOptions = "<label for=\"service\">Choose a service:</label>\r\n"
-				+ "		  <select name=\"service\">\r\n"
-				+ "		    <option value=\"Mobile phone\">Mobile phone</option>\r\n"
-				+ "		    <option value=\"Fixed phone\">Fixed phone</option>\r\n"
-				+ "		    <option value=\"Internet\"> Internet</option>\r\n"
-				+ "		  </select>";
-		out.println(serviceOptions);*/
 		
 		
 		
