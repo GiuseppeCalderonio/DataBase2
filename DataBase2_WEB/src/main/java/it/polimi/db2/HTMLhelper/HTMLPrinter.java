@@ -226,6 +226,23 @@ public class HTMLPrinter {
 		Form goToLogin = new Form("LoginServlet", "GET", "", null, toShow);
 		out.println(goToLogin.toString() + "<br>");
 		
+		////////////////////////////////////////////////////
+		
+		out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
+		String creationOptions = "<label for=\"toCreate\">Choose what you want to create:</label>\r\n"
+				+ "		  <select name=\"toCreate\">\r\n"
+				+ "		    <option value=\"PACKAGE\">Package</option>\r\n"
+				+ "		    <option value=\"OPTIONALPRODUCT\">Optional Product</option>\r\n"
+				+ "		    <option value=\"MOBILEPHONE\">Mobile phone service</option>\r\n"
+				+ "		    <option value=\"FIXEDINTERNET\">Fixed internet service</option>\r\n"
+				+ "		    <option value=\"MOBILEINTERNET\">Mobile internet service</option>\r\n"
+				+ "		  </select>";
+		out.println(creationOptions);
+		out.println("<input type=\"submit\" value=\"Submit\">");
+		out.println("</form>");
+		
+		///////////////////////////////////////////////////
+		
 		try {
 		
 			switch(toCreate) {
@@ -291,6 +308,8 @@ public class HTMLPrinter {
 			}
 		
 		} catch (NullPointerException e) {
+			
+			/*
 			out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
 			String creationOptions = "<label for=\"toCreate\">Choose what you want to create:</label>\r\n"
 					+ "		  <select name=\"toCreate\">\r\n"
@@ -303,10 +322,8 @@ public class HTMLPrinter {
 			out.println(creationOptions);
 			out.println("<input type=\"submit\" value=\"Submit\">");
 			out.println("</form>");
+			*/
 		}
-		
-		
-		
 		
 		
 		out.println("</body>");

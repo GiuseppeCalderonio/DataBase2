@@ -66,49 +66,7 @@ public class GoToEmployeeHomePage extends HttpServlet {
 			response.sendRedirect(path);
 		}
 		
-		Creation toCreate = null;
-		
-		try {
-			/*if  (request.getParameter("toCreate").equals("PACKAGE")) {
-				toCreate = Creation.PACKAGE;
-				System.out.println(toCreate);
-			}
-			else  {
-				if (request.getParameter("toCreate").equals("OPTIONALPRODUCT")) 
-					toCreate = Creation.OPTIONALPRODUCT;
-				}*/
-			
-			 switch (request.getParameter("toCreate")) {
-				case "PACKAGE":
-					toCreate = Creation.PACKAGE;
-					break;
-					
-				case "OPTIONALPRODUCT":
-					toCreate = Creation.OPTIONALPRODUCT;
-					break;
-					
-				case "MOBILEPHONE":
-					toCreate = Creation.MOBILEPHONE;
-					break;
-					
-				case "FIXEDINTERNET":
-					toCreate = Creation.FIXEDINTERNET;
-					break;
-					
-				case "MOBILEINTERNET":
-					toCreate = Creation.MOBILEINTERNET;
-					break;
-					
-				default:
-					System.out.println("Somenthing wrong happened");
-					break;
-			}
-			
-		} catch (NullPointerException e) {
-			
-		}
-		
-		printPage("", response.getWriter(), username, toCreate);
+		printPage("", response.getWriter(), username, getCreation(request));
 		
 	}
 
@@ -124,6 +82,19 @@ public class GoToEmployeeHomePage extends HttpServlet {
 	private void printPage(String errorMessage, @NotNull PrintWriter out, String username, Creation toCreate) {
 		
 		new HTMLPrinter(out, "EmployeeHomePage").printEmployeeHomePage(errorMessage, username, toCreate);
+	}
+	
+	private Creation getCreation(HttpServletRequest request) {
+		
+		try {
+			
+			return Creation.valueOf(Creation.class, request.getParameter("toCreate"));
+			
+		}catch(NullPointerException e ) {
+			
+			return null;
+			
+		}
 	}
 
 }
