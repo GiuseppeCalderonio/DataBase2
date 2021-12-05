@@ -2,6 +2,7 @@ package it.polimi.db2.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -13,9 +14,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
 import it.polimi.db2.Creation;
+import it.polimi.db2.Service;
 import it.polimi.db2.HTMLhelper.HTMLPrinter;
+import it.polimi.db2.entities.FixedPhone;
+import it.polimi.db2.entities.Internet;
+import it.polimi.db2.entities.MobilePhone;
+import it.polimi.db2.entities.OptionalProduct;
 import it.polimi.db2.entities.Package;
+import it.polimi.db2.exceptions.OptinalProductsNotFoundException;
+import it.polimi.db2.exceptions.ServiceNotFoundException;
+import it.polimi.db2.jee.stateless.EmployeeManager;
 import it.polimi.db2.jee.stateless.UserManager;
+
 
 /**
  * Servlet implementation class GoToEmployeeHomePage
@@ -26,6 +36,10 @@ public class GoToEmployeeHomePage extends HttpServlet {
 	
 	@EJB(name = "it.polimi.db2.jee.stateless/UserManager")
 	private UserManager userManager;
+	
+	@EJB(name = "it.polimi.db2.jee.stateless/EmployeeManager")
+	private EmployeeManager employeeManager;
+	
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -43,6 +57,10 @@ public class GoToEmployeeHomePage extends HttpServlet {
 		
 		int userId;
 		String username;
+		List<OptionalProduct> optionalProducts = new ArrayList<>();
+		List<Internet> internetServices = new ArrayList<>();
+		List<FixedPhone> fixedPhoneServices = new ArrayList<>();
+		List<MobilePhone> mobilePhoneServices = new ArrayList<>();
 		
 		try {
 			
@@ -61,12 +79,32 @@ public class GoToEmployeeHomePage extends HttpServlet {
 			username = null;
 			
 			// redirect the user to the login page (if not logged, he cannot access this page)
+			// and finish the execution of the get
 			
 			String path = getServletContext().getContextPath() + "/LoginServlet";
 			response.sendRedirect(path);
+			return;
 		}
 		
-		printPage("", response.getWriter(), username, getCreation(request));
+		Creation creation = getCreation(request);
+		
+		String errorMessage = "";
+		
+		fillFields(creation,
+				optionalProducts,
+				internetServices,
+				fixedPhoneServices,
+				mobilePhoneServices,
+				errorMessage);
+		
+		printPage(errorMessage,
+				response.getWriter(),
+				username,
+				creation,
+				optionalProducts,
+				internetServices,
+				fixedPhoneServices,
+				mobilePhoneServices);
 		
 	}
 
@@ -79,9 +117,22 @@ public class GoToEmployeeHomePage extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private void printPage(String errorMessage, @NotNull PrintWriter out, String username, Creation toCreate) {
+	private void printPage(String errorMessage,
+			@NotNull PrintWriter out,
+			String username,
+			Creation toCreate,
+			List<OptionalProduct> optionalProducts,
+			List<Internet> internetServices,
+			List<FixedPhone> fixedPhoneServices,
+			List<MobilePhone> mobilePhoneServices) {
 		
-		new HTMLPrinter(out, "EmployeeHomePage").printEmployeeHomePage(errorMessage, username, toCreate);
+		new HTMLPrinter(out, "EmployeeHomePage").printEmployeeHomePage(errorMessage,
+				username,
+				toCreate,
+				optionalProducts,
+				internetServices,
+				fixedPhoneServices,
+				mobilePhoneServices);
 	}
 	
 	private Creation getCreation(HttpServletRequest request) {
@@ -94,6 +145,33 @@ public class GoToEmployeeHomePage extends HttpServlet {
 			
 			return null;
 			
+		}
+	}
+	
+	private void fillFields(Creation creation, 
+			List<OptionalProduct> optionalProducts,
+			List<Internet> internetServices,
+			List<FixedPhone> fixedPhoneServices,
+			List<MobilePhone> mobilePhoneServices,
+			String errorMessage) {
+		
+		if (creation == null) return;
+		if (creation.equals(Creation.PACKAGE)) {
+			
+			// to get the optional products and services available
+			
+			try { 
+				
+				optionalProducts.addAll(employeeManager.getOptionalProducts());
+				internetServices.addAll(employeeManager.getInternetServices());
+				fixedPhoneServices.addAll(employeeManager.getFixedPhoneServices());
+				mobilePhoneServices.addAll(employeeManager.getMobilePhoneServices());
+				
+			} catch (OptinalProductsNotFoundException | ServiceNotFoundException e) {
+				// problems
+				e.printStackTrace();
+				errorMessage = e.getMessage();
+			}
 		}
 	}
 

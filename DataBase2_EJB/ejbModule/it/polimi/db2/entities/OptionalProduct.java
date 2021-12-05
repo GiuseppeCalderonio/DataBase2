@@ -16,12 +16,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "optional_product")
+@NamedQuery(name = "getOptionalProducts",
+query = "SELECT op FROM OptionalProduct op")
 public class OptionalProduct implements Serializable{
 	
 	@Id
@@ -36,8 +39,7 @@ public class OptionalProduct implements Serializable{
 	private Collection<Order> orders;
 	
 	@ManyToMany(fetch = FetchType.LAZY,
-			mappedBy = "optionalProducts",
-			cascade = CascadeType.PERSIST)
+			mappedBy = "optionalProducts")
 	private Collection<Package> packages;
 
 	public String getName() {
@@ -70,9 +72,7 @@ public class OptionalProduct implements Serializable{
 
 	public void setPackages(Collection<Package> packages) {
 		this.packages = packages;
-		for(Package p : packages) {
-			p.addOptionalProduct(this);
-		}
+		
 	}
 	
 	/**
@@ -85,7 +85,6 @@ public class OptionalProduct implements Serializable{
 	 */
 	public void addPackage(Package pack) {
 		packages.add(pack);
-		pack.addOptionalProduct(this);
 	}
 	
 	public String toString() {

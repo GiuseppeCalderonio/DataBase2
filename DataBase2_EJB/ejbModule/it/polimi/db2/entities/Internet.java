@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -24,6 +25,8 @@ import it.polimi.db2.Service;
 
 @Entity
 @Table(name = "internet")
+@NamedQuery(name = "getInternetServices",
+query = "SELECT i FROM Internet i")
 public class Internet implements Serializable, Service{
 	
 	@Id
@@ -38,7 +41,7 @@ public class Internet implements Serializable, Service{
 	@Column(name = "gb_extra_fee")
 	private int gigaBytesExtraFee;
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "internetServices")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "internetService")
 	private Collection<Package> packages;
 
 	public int getServiceid() {

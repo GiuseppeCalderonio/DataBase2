@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -24,15 +25,27 @@ import it.polimi.db2.Service;
 
 @Entity
 @Table(name = "fixed_phone")
+@NamedQuery(name = "getFixedPhoneServices",
+query = "SELECT fp FROM FixedPhone fp")
 public class FixedPhone implements Serializable, Service{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int serviceid;
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "fixedPhoneServices")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fixedPhoneService")
 	private Collection<Package> packages;
 	
+	
+	
+	public int getServiceid() {
+		return serviceid;
+	}
+
+	public void setServiceid(int serviceid) {
+		this.serviceid = serviceid;
+	}
+
 	public Collection<Package> getPackages() {
 		return packages;
 	}

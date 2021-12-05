@@ -8,6 +8,7 @@ import java.util.List;
 import it.polimi.db2.entities.*;
 import it.polimi.db2.entities.Package;
 import it.polimi.db2.Creation;
+import it.polimi.db2.Service;
 
 public class HTMLPrinter {
 	
@@ -215,7 +216,26 @@ public class HTMLPrinter {
 		out.println("</html>");
 	}
 	
-	public void printEmployeeHomePage(String errorMessage, String username, Creation toCreate) {
+	
+	/**
+	 * this method prints the home page for the employee in order to 
+	 * support him in all the possible actions that he can do
+	 * @param errorMessage this is the error message to eventually show
+	 * @param username this is the username of the employee
+	 * @param toCreate this is the form to create, and consecutively the action to do
+	 * @param optionalProducts these are all the optional products of the db to eventually show when creating a package form
+	 * @param internetServices these are all the Internet services of the db to eventually show when creating a package form
+	 * @param fixedPhoneServices these are all the fixed phone services of the db to eventually show when creating a package form
+	 * @param mobilePhoneServices these are all the mobile phone services of the db to eventually show when creating a package form
+	 */
+	public void printEmployeeHomePage(String errorMessage,
+			String username,
+			Creation toCreate,
+			List<OptionalProduct> optionalProducts,
+			List<Internet> internetServices,
+			List<FixedPhone> fixedPhoneServices,
+			List<MobilePhone> mobilePhoneServices) {
+		
 		printHeader();
 		out.println("<body>");
 		out.println("<h1>In this page you can create a package with the associated optional products or an optional product</h1>");
@@ -248,58 +268,31 @@ public class HTMLPrinter {
 			switch(toCreate) {
 			
 			case OPTIONALPRODUCT:
-				out.println("<b> Optional product creation <br> </b>");
-				
-				List<FormInstance> optionalProductInstances = new ArrayList<>();
-				
-				optionalProductInstances.add(new FormInstance("Name", "text", "name", true));
-				optionalProductInstances.add(new FormInstance("Fee", "float", "fee", true));
-				
-				Form optionalProductForm = new Form("GoToEmployeeHomePage", "POST", "", optionalProductInstances, "create");
-				out.println(optionalProductForm.toString());
+				optionalProductCase(errorMessage);
 				//TODO check if fee is a number
 				break;
 			
 			case PACKAGE:
+				packageCase(optionalProducts,internetServices ,fixedPhoneServices , mobilePhoneServices,  errorMessage);
 				break;
 				
 			case MOBILEPHONE:
-				out.println("<b> Mobile phone service creation <br> </b>");
-				
-				List<FormInstance> mobilePhoneInstances = new ArrayList<>();
-				
-				mobilePhoneInstances.add(new FormInstance("Minutes", "int", "minutes", true));
-				mobilePhoneInstances.add(new FormInstance("SMS", "int", "sms", true));
-				mobilePhoneInstances.add(new FormInstance("Fee extra SMS", "float", "sms", true));
-				
-				Form mobilePhoneForm = new Form("GoToEmployeeHomePage", "POST", "", mobilePhoneInstances, "create");
-				out.println(mobilePhoneForm.toString());
+				mobilePhoneCase(errorMessage);
 				//TODO check are numbers
 				break;
 				
 			case MOBILEINTERNET:
-				out.println("<b> Mobile internet service creation <br> </b>");
 				
-				List<FormInstance> mobileInternetInstances = new ArrayList<>();
+				mobileInternetCase(errorMessage);
 				
-				mobileInternetInstances.add(new FormInstance("GB", "int", "GIGA", true));
-				mobileInternetInstances.add(new FormInstance("Fee extra GB", "float", "fee extra GB", true));
 				
-				Form mobileInternetForm = new Form("GoToEmployeeHomePage", "POST", "", mobileInternetInstances, "create");
-				out.println(mobileInternetForm.toString());
 				//TODO check are numbers
 				break;
 				
 			case FIXEDINTERNET:
-				out.println("<b> Fixed internet service creation <br> </b>");
 				
-				List<FormInstance> fixedInternetInstances = new ArrayList<>();
+				fixedInternetCase(errorMessage);
 				
-				fixedInternetInstances.add(new FormInstance("GB", "int", "GIGA", true));
-				fixedInternetInstances.add(new FormInstance("Fee extra GB", "float", "fee extra GB", true));
-				
-				Form fixedInternetForm = new Form("GoToEmployeeHomePage", "POST", "", fixedInternetInstances, "create");
-				out.println(fixedInternetForm.toString());
 				//TODO check are numbers
 				break;
 				
@@ -308,21 +301,6 @@ public class HTMLPrinter {
 			}
 		
 		} catch (NullPointerException e) {
-			
-			/*
-			out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
-			String creationOptions = "<label for=\"toCreate\">Choose what you want to create:</label>\r\n"
-					+ "		  <select name=\"toCreate\">\r\n"
-					+ "		    <option value=\"PACKAGE\">Package</option>\r\n"
-					+ "		    <option value=\"OPTIONALPRODUCT\">Optional Product</option>\r\n"
-					+ "		    <option value=\"MOBILEPHONE\">Mobile phone service</option>\r\n"
-					+ "		    <option value=\"FIXEDINTERNET\">Fixed internet service</option>\r\n"
-					+ "		    <option value=\"MOBILEINTERNET\">Mobile internet service</option>\r\n"
-					+ "		  </select>";
-			out.println(creationOptions);
-			out.println("<input type=\"submit\" value=\"Submit\">");
-			out.println("</form>");
-			*/
 		}
 		
 		
@@ -350,5 +328,98 @@ public class HTMLPrinter {
 		
 	}
 	
+	private void optionalProductCase(String errorMessage) {
+		out.println("<b> Optional product creation <br> </b>");
+		
+		List<FormInstance> optionalProductInstances = new ArrayList<>();
+		
+		optionalProductInstances.add(new FormInstance("Name", "text", "name", true));
+		optionalProductInstances.add(new FormInstance("Fee", "float", "fee", true));
+		
+		Form optionalProductForm = new Form("OptionalProductCreation", "POST", errorMessage, optionalProductInstances, "create");
+		out.println(optionalProductForm.toString());
+	}
+	
+	private void mobilePhoneCase(String errorMessage) {
+		
+		out.println("<b> Mobile phone service creation <br> </b>");
+		
+		List<FormInstance> mobilePhoneInstances = new ArrayList<>();
+		
+		mobilePhoneInstances.add(new FormInstance("Minutes", "int", "minutes", true));
+		mobilePhoneInstances.add(new FormInstance("SMS", "int", "sms", true));
+		mobilePhoneInstances.add(new FormInstance("Fee extra SMS", "float", "sms", true));
+		
+		Form mobilePhoneForm = new Form("GoToEmployeeHomePage", "POST", errorMessage, mobilePhoneInstances, "create");
+		out.println(mobilePhoneForm.toString());
+		
+	}
+	
+	private void mobileInternetCase(String errorMessage) {
+		
+		out.println("<b> Mobile internet service creation <br> </b>");
+		
+		List<FormInstance> mobileInternetInstances = new ArrayList<>();
+		
+		mobileInternetInstances.add(new FormInstance("GB", "int", "GIGA", true));
+		mobileInternetInstances.add(new FormInstance("Fee extra GB", "float", "fee extra GB", true));
+		
+		Form mobileInternetForm = new Form("GoToEmployeeHomePage", "POST", errorMessage, mobileInternetInstances, "create");
+		out.println(mobileInternetForm.toString());
+		
+	}
+	
+	private void fixedInternetCase(String errorMessage) {
+		
+		out.println("<b> Fixed internet service creation <br> </b>");
+		
+		List<FormInstance> fixedInternetInstances = new ArrayList<>();
+		
+		fixedInternetInstances.add(new FormInstance("GB", "int", "GIGA", true));
+		fixedInternetInstances.add(new FormInstance("Fee extra GB", "float", "fee extra GB", true));
+		
+		Form fixedInternetForm = new Form("GoToEmployeeHomePage", "POST", errorMessage, fixedInternetInstances, "create");
+		out.println(fixedInternetForm.toString());
+		
+	}
+	
+	private void packageCase( List<OptionalProduct> optionalProducts,
+			List<Internet> internetServices,
+			List<FixedPhone> fixedPhoneServices,
+			List<MobilePhone> mobilePhoneServices,
+			String errorMessage) {
+		
+		out.println("<b> Package creation <br> </b>");
+		
+		List<FormInstance> packageInstances = new ArrayList<>();
+		
+		packageInstances.add(new FormInstance("Name", "text", "name"));
+		packageInstances.add(new FormInstance("Monthly fee for 12 months", "int", "fee12"));
+		packageInstances.add(new FormInstance("Monthly fee for 24 months", "int", "fee24"));
+		packageInstances.add(new FormInstance("Monthly fee for 36 months", "int", "fee36"));
+		
+		for(OptionalProduct op : optionalProducts) {
+			
+			packageInstances.add(new FormInstance("Optional product :[" + op.toString() + " ]" ,"checkbox", op.getName(), false));
+		}
+		
+		for(Internet s : internetServices) {
+			packageInstances.add(new FormInstance(s.toString() ,"radio", "internetService", s.getServiceid() + ""));
+		}
+		
+		for(FixedPhone s : fixedPhoneServices) {
+			packageInstances.add(new FormInstance(s.toString() ,"radio", "fixedPhoneService", s.getServiceid() + ""));
+		}
+		
+		for(MobilePhone s : mobilePhoneServices) {
+			packageInstances.add(new FormInstance(s.toString() ,"radio", "mobilePhoneService", s.getServiceid() + ""));
+		}
+		
+		out.println(new Form("GoToEmployeeHomePage", "POST", errorMessage, packageInstances, "create"));
+		
+	}
+	}
+		
+	
 
-}
+

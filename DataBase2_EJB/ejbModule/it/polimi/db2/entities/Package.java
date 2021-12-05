@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -50,23 +51,17 @@ public class Package implements Serializable{
 	inverseJoinColumns=@JoinColumn(name="name"))
 	private Collection<OptionalProduct> optionalProducts;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	@JoinTable(name="provides",
-	joinColumns=@JoinColumn(name="packageid"),
-	inverseJoinColumns=@JoinColumn(name="serviceid"))
-	private Collection<FixedPhone> fixedPhoneServices;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "fixed_phone_id")
+	private FixedPhone fixedPhoneService;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	@JoinTable(name="provides",
-	joinColumns=@JoinColumn(name="packageid"),
-	inverseJoinColumns=@JoinColumn(name="serviceid"))
-	private Collection<MobilePhone> mobilePhoneServices;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "mobile_phone_id")
+	private MobilePhone mobilePhoneService;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	@JoinTable(name="provides",
-	joinColumns=@JoinColumn(name="packageid"),
-	inverseJoinColumns=@JoinColumn(name="serviceid"))
-	private Collection<Internet> internetServices;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "internet_id")
+	private Internet internetService;
 
 	public int getPackageid() {
 		return packageid;
@@ -124,34 +119,37 @@ public class Package implements Serializable{
 		return optionalProducts;
 	}
 	
-	public void addOptionalProduct(OptionalProduct optionalProduct) {
-		optionalProducts.add(optionalProduct);
+	public void setOptionalProducts(List<OptionalProduct> optionalProducts) {
+		this.optionalProducts = optionalProducts;
+		for(OptionalProduct op : optionalProducts) {
+			op.addPackage(this);
+		}
 	}
 
-	public Collection<FixedPhone> getFixedPhoneServices() {
-		return fixedPhoneServices;
+	public FixedPhone getFixedPhoneService() {
+		return fixedPhoneService;
 	}
 
-	public void addFixedPhoneServices(FixedPhone fixedPhoneService) {
-		this.fixedPhoneServices.add(fixedPhoneService);
+	public void setFixedPhoneService(FixedPhone fixedPhoneService) {
+		this.fixedPhoneService = fixedPhoneService;
 		fixedPhoneService.addPackage(this);
 	}
 
-	public Collection<MobilePhone> getMobilePhoneServices() {
-		return mobilePhoneServices;
+	public MobilePhone getMobilePhoneServices() {
+		return mobilePhoneService;
 	}
 
-	public void addMobilePhoneServices(MobilePhone mobilePhoneService) {
-		this.mobilePhoneServices.add(mobilePhoneService);
+	public void setMobilePhoneService(MobilePhone mobilePhoneService) {
+		this.mobilePhoneService = mobilePhoneService;
 		mobilePhoneService.addPackage(this);
 	}
 
-	public Collection<Internet> getInternetServices() {
-		return internetServices;
+	public Internet getInternetServices() {
+		return internetService;
 	}
 
-	public void addInternetServices(Internet internetService) {
-		this.internetServices.add(internetService);
+	public void setInternetService(Internet internetService) {
+		this.internetService = internetService;
 		internetService.addPackage(this);
 	}
 	
@@ -173,9 +171,9 @@ public class Package implements Serializable{
 		// gather services
 		
 		List<Service> servicesOffered = new ArrayList<>();
-		servicesOffered.addAll(fixedPhoneServices);
-		servicesOffered.addAll(internetServices);
-		servicesOffered.addAll(mobilePhoneServices);
+		servicesOffered.add(fixedPhoneService);
+		servicesOffered.add(internetService);
+		servicesOffered.add(mobilePhoneService);
 		
 		// print a list of services
 		

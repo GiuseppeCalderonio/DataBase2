@@ -24,6 +24,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -32,6 +33,8 @@ import it.polimi.db2.Service;
 
 @Entity
 @Table(name = "mobile_phone")
+@NamedQuery(name = "getMobilePhoneServices",
+query = "SELECT mp FROM MobilePhone mp")
 public class MobilePhone implements Serializable, Service{
 	
 	@Id
@@ -50,7 +53,7 @@ public class MobilePhone implements Serializable, Service{
 	
 	
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "mobilePhoneServices")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "mobilePhoneService")
 	private Collection<Package> packages;
 	
 	
