@@ -60,8 +60,12 @@ public class Package implements Serializable{
 	private MobilePhone mobilePhoneService;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "internet_id")
-	private Internet internetService;
+	@JoinColumn(name = "fixed_internet_id")
+	private FixedInternet fixedInternetService;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "mobile_internet_id")
+	private MobileInternet mobileInternetService;
 
 	public int getPackageid() {
 		return packageid;
@@ -132,7 +136,8 @@ public class Package implements Serializable{
 
 	public void setFixedPhoneService(FixedPhone fixedPhoneService) {
 		this.fixedPhoneService = fixedPhoneService;
-		fixedPhoneService.addPackage(this);
+		if(fixedPhoneService != null)
+			fixedPhoneService.addPackage(this);
 	}
 
 	public MobilePhone getMobilePhoneServices() {
@@ -141,16 +146,28 @@ public class Package implements Serializable{
 
 	public void setMobilePhoneService(MobilePhone mobilePhoneService) {
 		this.mobilePhoneService = mobilePhoneService;
+		if(mobilePhoneService != null)
 		mobilePhoneService.addPackage(this);
 	}
 
-	public Internet getInternetServices() {
-		return internetService;
+	public FixedInternet getFixedInternetServices() {
+		return fixedInternetService;
 	}
 
-	public void setInternetService(Internet internetService) {
-		this.internetService = internetService;
-		internetService.addPackage(this);
+	public void setFixedInternetService(FixedInternet fixedInternetService) {
+		this.fixedInternetService = fixedInternetService;
+		if(fixedInternetService != null)
+		fixedInternetService.addPackage(this);
+	}
+	
+	public MobileInternet getMobileInternetServices() {
+		return mobileInternetService;
+	}
+
+	public void setMobileInternetService(MobileInternet mobileInternetService) {
+		this.mobileInternetService = mobileInternetService;
+		if(mobileInternetService != null)
+		mobileInternetService.addPackage(this);
 	}
 	
 	public String toString() {
@@ -172,7 +189,8 @@ public class Package implements Serializable{
 		
 		List<Service> servicesOffered = new ArrayList<>();
 		servicesOffered.add(fixedPhoneService);
-		servicesOffered.add(internetService);
+		servicesOffered.add(mobileInternetService);
+		servicesOffered.add(fixedInternetService);
 		servicesOffered.add(mobilePhoneService);
 		
 		// print a list of services

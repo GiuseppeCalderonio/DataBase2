@@ -3,6 +3,7 @@ package it.polimi.db2.entities;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.CascadeType;
@@ -24,16 +25,14 @@ import javax.persistence.Table;
 import it.polimi.db2.Service;
 
 @Entity
-@Table(name = "internet")
-@NamedQuery(name = "getInternetServices",
-query = "SELECT i FROM Internet i")
-public class Internet implements Serializable, Service{
+@Table(name = "fixed_internet")
+@NamedQuery(name = "getFixedInternetServices",
+query = "SELECT i FROM FixedInternet i")
+public class FixedInternet implements Serializable, Service{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int serviceid;
-	
-	private String name;
 	
 	@Column(name = "gb")
 	private int gigaBytes;
@@ -41,7 +40,7 @@ public class Internet implements Serializable, Service{
 	@Column(name = "gb_extra_fee")
 	private int gigaBytesExtraFee;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "internetService")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fixedInternetService")
 	private Collection<Package> packages;
 
 	public int getServiceid() {
@@ -50,14 +49,6 @@ public class Internet implements Serializable, Service{
 
 	public void setServiceid(int serviceid) {
 		this.serviceid = serviceid;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public int getGigaBytes() {
@@ -81,11 +72,14 @@ public class Internet implements Serializable, Service{
 	}
 
 	public void addPackage(Package pack) {
+		if(packages == null) {
+			packages = new ArrayList<>();
+		}
 		packages.add(pack);
 	}
 	
 	public String toString() {
-		String toReturn = name + " Internet:"
+		String toReturn = "Fixed Internet:"
 				+ " ID = " + serviceid
 				+ ", GB =  " + gigaBytes
 				+ ", Extra fees for GB = " + gigaBytesExtraFee;

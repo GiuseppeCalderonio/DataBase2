@@ -8,7 +8,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
 import it.polimi.db2.entities.FixedPhone;
-import it.polimi.db2.entities.Internet;
+import it.polimi.db2.entities.MobileInternet;
+import it.polimi.db2.entities.FixedInternet;
 import it.polimi.db2.entities.MobilePhone;
 import it.polimi.db2.entities.OptionalProduct;
 import it.polimi.db2.entities.Package;
@@ -40,10 +41,22 @@ public class EmployeeManager {
 	
 	}
 	
-	public List<Internet> getInternetServices() throws ServiceNotFoundException {
-		List<Internet> internetServices = null;
+	public List<FixedInternet> getFixedInternetServices() throws ServiceNotFoundException {
+		List<FixedInternet> internetServices = null;
 		try {
-			internetServices = em.createNamedQuery("getInternetServices", Internet.class).getResultList();
+			internetServices = em.createNamedQuery("getFixedInternetServices", FixedInternet.class).getResultList();
+		} catch (PersistenceException e) {
+			e.printStackTrace();
+			throw new ServiceNotFoundException("Could not retrieve packages");
+		}
+		return internetServices;
+	
+	}
+	
+	public List<MobileInternet> getMobileInternetServices() throws ServiceNotFoundException {
+		List<MobileInternet> internetServices = null;
+		try {
+			internetServices = em.createNamedQuery("getMobileInternetServices", MobileInternet.class).getResultList();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new ServiceNotFoundException("Could not retrieve packages");
@@ -79,7 +92,8 @@ public class EmployeeManager {
 	
 	public void addPackage(String name,
 			List<OptionalProduct> optionalProducts,
-			Internet i,
+			FixedInternet fi,
+			MobileInternet mi,
 			FixedPhone fp,
 			MobilePhone mp,
 			int fee12,
@@ -90,7 +104,8 @@ public class EmployeeManager {
 		pack.setOptionalProducts(optionalProducts);
 		pack.setFixedPhoneService(fp);
 		pack.setMobilePhoneService(mp);
-		pack.setInternetService(i);
+		pack.setFixedInternetService(fi);
+		pack.setMobileInternetService(mi);
 		pack.setFee12(fee12);
 		pack.setFee24(fee24);
 		pack.setFee36(fee36);
@@ -143,19 +158,44 @@ public class EmployeeManager {
 		}
 	}
 	
-	public void addInternetService(String name, int GB, int GBFee) throws PersistenceException  {
-		Internet i = new Internet();
+	public void addFixedInternetService(int GB, int GBFee) throws PersistenceException  {
+		FixedInternet i = new FixedInternet();
 		
-		i.setName(name);
 		i.setGigaBytes(GB);
 		i.setGigaBytesExtraFee(GBFee);
 		
 		try {
 			em.persist(i);
 		}catch(PersistenceException e) {
-			throw new PersistenceException(name + " internet service persist failed");
+			throw new PersistenceException("Fixed internet service persist failed");
 		}
 		
+	}
+	
+	public void addMobileInternetService(int GB, int GBFee) throws PersistenceException  {
+		MobileInternet i = new MobileInternet();
+		
+		i.setGigaBytes(GB);
+		i.setGigaBytesExtraFee(GBFee);
+		
+		try {
+			em.persist(i);
+		}catch(PersistenceException e) {
+			throw new PersistenceException("Mobile internet service persist failed");
+		}
+		
+	}
+	
+	public MobilePhone getMobilePhone(int id) {
+		return em.find(MobilePhone.class, id);
+	}
+	
+	public MobileInternet getMobileInternet(int id) {
+		return em.find(MobileInternet.class, id);
+	}
+	
+	public FixedInternet getFixedInternet(int id) {
+		return em.find(FixedInternet.class, id);
 	}
 
 }

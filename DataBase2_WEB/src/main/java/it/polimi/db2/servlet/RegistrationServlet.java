@@ -73,7 +73,7 @@ public class RegistrationServlet extends HttpServlet {
 			
 			String temp = (request.getParameter("isEmployee"));
 			
-			isEmployee = temp != null;
+			isEmployee = (temp != null);
 			
 			// if the data sent are inherently wrong
 			

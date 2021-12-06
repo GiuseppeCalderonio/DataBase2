@@ -5,7 +5,8 @@
 		<jta-data-source>DataBases2_EJB</jta-data-source>
 			
 			<class>it.polimi.db2.entities.FixedPhone</class>
-			<class>it.polimi.db2.entities.Internet</class>
+			<class>it.polimi.db2.entities.FixedInternet</class>
+			<class>it.polimi.db2.entities.MobileInternet</class>
 			<class>it.polimi.db2.entities.MobilePhone</class>
 			<class>it.polimi.db2.entities.OptionalProduct</class>
 			<class>it.polimi.db2.entities.Order</class>

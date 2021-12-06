@@ -17,10 +17,10 @@ import it.polimi.db2.jee.stateless.EmployeeManager;
 import it.polimi.db2.jee.stateless.UserManager;
 
 /**
- * Servlet implementation class OptionalProductCreation
+ * Servlet implementation class MobilePhoneServiceCreation
  */
-@WebServlet("/OptionalProductCreation")
-public class OptionalProductCreation extends HttpServlet {
+@WebServlet("/MobilePhoneServiceCreation")
+public class MobilePhoneServiceCreation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	@EJB(name = "it.polimi.db2.jee.stateless/UserManager")
@@ -32,7 +32,7 @@ public class OptionalProductCreation extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public OptionalProductCreation() {
+    public MobilePhoneServiceCreation() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,8 +41,6 @@ public class OptionalProductCreation extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
 		String path = getServletContext().getContextPath() + "/LoginServlet";
 		response.sendRedirect(path);
 	}
@@ -51,8 +49,6 @@ public class OptionalProductCreation extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
 		int userId;
 		String username;
 		
@@ -80,46 +76,50 @@ public class OptionalProductCreation extends HttpServlet {
 			return;
 		}
 		
-		String name;
-		int fee;
+		int minutes;
+		int sms;
+		int minutesExtraFee;
+		int smsExtraFee;
 		
 		try { // to get the parameters
 			
-			// get the name
+			// get the minutes
 			
-			name = request.getParameter("name");
+			minutes = Integer.parseInt( request.getParameter("minutes"));
 			
-			// get the fee
+			// get the minutes extra fee
 			
-			fee = Integer.parseInt(request.getParameter("fee"));
+			minutesExtraFee = Integer.parseInt(request.getParameter("minutesExtraFee"));
 			
-			// if the name is empty do not allow the creation
+			// get the sms
 			
-			if(name.equals(""))
-				throw new NullPointerException("cannot use the empty string");
+			sms = Integer.parseInt( request.getParameter("sms"));
 			
-			// create the optional product
+			// get the sms extra fee
 			
-			employeeManager.addOptionalProduct(name, fee);
+			smsExtraFee = Integer.parseInt( request.getParameter("smsExtraFee"));
+			
+			// create the service
+			
+			employeeManager.addMobilePhoneService(minutes, sms, minutesExtraFee, smsExtraFee);
 			
 			// print the page
 			
-			printPage(response.getWriter(), "Optional product correctly created", username);
+			printPage(response.getWriter(), "Service correctly created", username);
 			
 			
 		}catch (NumberFormatException | NullPointerException | PersistenceException   e) {
-			// somethong went wrong
+			// something went wrong
 			
 			printPage(response.getWriter(), e.getMessage(), username);
 		}
-		
 	}
 	
 	private void printPage(PrintWriter out, String errorMessage, String username) {
 		new HTMLPrinter(out, "EmployeeHomePage").
 		printEmployeeHomePage(errorMessage,
 				username,
-				Creation.OPTIONALPRODUCT,
+				Creation.MOBILEPHONE,
 				null, null, null, null, null);
 	}
 

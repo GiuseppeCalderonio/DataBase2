@@ -1,5 +1,6 @@
 package it.polimi.db2.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.FetchType;
@@ -107,6 +108,9 @@ public class MobilePhone implements Serializable, Service{
 	}
 
 	public void addPackage(Package pack) {
+		if(packages == null) {
+			packages = new ArrayList<>();
+		}
 		packages.add(pack);
 	}
 	

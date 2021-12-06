@@ -17,7 +17,8 @@ import it.polimi.db2.Creation;
 import it.polimi.db2.Service;
 import it.polimi.db2.HTMLhelper.HTMLPrinter;
 import it.polimi.db2.entities.FixedPhone;
-import it.polimi.db2.entities.Internet;
+import it.polimi.db2.entities.MobileInternet;
+import it.polimi.db2.entities.FixedInternet;
 import it.polimi.db2.entities.MobilePhone;
 import it.polimi.db2.entities.OptionalProduct;
 import it.polimi.db2.entities.Package;
@@ -58,7 +59,8 @@ public class GoToEmployeeHomePage extends HttpServlet {
 		int userId;
 		String username;
 		List<OptionalProduct> optionalProducts = new ArrayList<>();
-		List<Internet> internetServices = new ArrayList<>();
+		List<FixedInternet> fixedInternetServices = new ArrayList<>();
+		List<MobileInternet> mobileInternetServices = new ArrayList<>();
 		List<FixedPhone> fixedPhoneServices = new ArrayList<>();
 		List<MobilePhone> mobilePhoneServices = new ArrayList<>();
 		
@@ -92,7 +94,8 @@ public class GoToEmployeeHomePage extends HttpServlet {
 		
 		fillFields(creation,
 				optionalProducts,
-				internetServices,
+				fixedInternetServices,
+				mobileInternetServices,
 				fixedPhoneServices,
 				mobilePhoneServices,
 				errorMessage);
@@ -102,7 +105,8 @@ public class GoToEmployeeHomePage extends HttpServlet {
 				username,
 				creation,
 				optionalProducts,
-				internetServices,
+				fixedInternetServices,
+				mobileInternetServices,
 				fixedPhoneServices,
 				mobilePhoneServices);
 		
@@ -122,7 +126,8 @@ public class GoToEmployeeHomePage extends HttpServlet {
 			String username,
 			Creation toCreate,
 			List<OptionalProduct> optionalProducts,
-			List<Internet> internetServices,
+			List<FixedInternet> fixedInternetServices,
+			List<MobileInternet> mobileInternetServices,
 			List<FixedPhone> fixedPhoneServices,
 			List<MobilePhone> mobilePhoneServices) {
 		
@@ -130,7 +135,8 @@ public class GoToEmployeeHomePage extends HttpServlet {
 				username,
 				toCreate,
 				optionalProducts,
-				internetServices,
+				fixedInternetServices,
+				mobileInternetServices,
 				fixedPhoneServices,
 				mobilePhoneServices);
 	}
@@ -150,7 +156,8 @@ public class GoToEmployeeHomePage extends HttpServlet {
 	
 	private void fillFields(Creation creation, 
 			List<OptionalProduct> optionalProducts,
-			List<Internet> internetServices,
+			List<FixedInternet> fixedInternetServices,
+			List<MobileInternet> mobileInternetServices,
 			List<FixedPhone> fixedPhoneServices,
 			List<MobilePhone> mobilePhoneServices,
 			String errorMessage) {
@@ -163,7 +170,8 @@ public class GoToEmployeeHomePage extends HttpServlet {
 			try { 
 				
 				optionalProducts.addAll(employeeManager.getOptionalProducts());
-				internetServices.addAll(employeeManager.getInternetServices());
+				fixedInternetServices.addAll(employeeManager.getFixedInternetServices());
+				mobileInternetServices.addAll(employeeManager.getMobileInternetServices());
 				fixedPhoneServices.addAll(employeeManager.getFixedPhoneServices());
 				mobilePhoneServices.addAll(employeeManager.getMobilePhoneServices());
 				
