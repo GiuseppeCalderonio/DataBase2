@@ -151,7 +151,7 @@ public class HTMLPrinter {
 			formInstances.add(new FormInstance("Start date(yyyy-mm-dd) ","date","startDate"));
 			
 			for(OptionalProduct op : packageChosen.getOptionalProducts()) {
-				formInstances.add(new FormInstance(op.toString() ,"checkbox",op.getName()));
+				formInstances.add(new FormInstance(op.toString() ,"checkbox",op.getName(), false));
 				
 			}
 			
@@ -171,13 +171,14 @@ public class HTMLPrinter {
 		
 		// print the package chosen
 		
-		out.println("<br>Package chose details: " + packageChosen.toString());
+		out.println("<br>Package chose details: <br>" + packageChosen.toString());
 		out.println("<br>");
-		out.println("</body>");
-		out.println("</body>");
-		out.println("<ul>");
 		
 		// print all the optional products chosen
+		
+		out.println("Optional products chosen among those available: <br>");
+		out.println("<ul>");
+		
 		
 		for(OptionalProduct op : optionalProductsChosen) {
 			out.print("<li>");

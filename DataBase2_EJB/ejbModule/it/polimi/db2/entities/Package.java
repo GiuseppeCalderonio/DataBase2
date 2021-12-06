@@ -188,10 +188,21 @@ public class Package implements Serializable{
 		// gather services
 		
 		List<Service> servicesOffered = new ArrayList<>();
-		servicesOffered.add(fixedPhoneService);
-		servicesOffered.add(mobileInternetService);
-		servicesOffered.add(fixedInternetService);
-		servicesOffered.add(mobilePhoneService);
+		if(fixedPhoneService != null)
+			servicesOffered.add(fixedPhoneService);
+		if(mobileInternetService != null)
+			servicesOffered.add(mobileInternetService);
+		if(fixedInternetService != null)
+			servicesOffered.add(fixedInternetService);
+		if(mobilePhoneService != null)
+			servicesOffered.add(mobilePhoneService);
+		
+		//servicesOffered.stream().filter(so -> so != null).toList();
+		
+		//System.out.println(servicesOffered);
+		
+		if(servicesOffered.isEmpty())
+			return toReturn + "No <br>";
 		
 		// print a list of services
 		

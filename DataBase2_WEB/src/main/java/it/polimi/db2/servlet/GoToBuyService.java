@@ -137,12 +137,24 @@ public class GoToBuyService extends HttpServlet {
 		
 		// get in a list the optional products of a package
 		
-		List<String> optionalProductsChosen = packageChosen.getOptionalProducts()
-				.stream().map(op -> op.getName()).toList();
+		List<String> optionalProducts = packageChosen.getOptionalProducts()
+				.stream().
+				map(op -> op.getName()).
+				toList();
 		
 		// filter only the optional products of the package chosen that were selected by the user
 		
-		optionalProductsChosen.stream().filter(op -> request.getParameter(op) != null).toList();
+		List<String> optionalProductsChosen = new ArrayList<>();
+		
+		for(String op : optionalProducts) {
+			if(request.getParameter(op) != null) {
+				optionalProductsChosen.add(op);
+			}
+		}
+		
+		//optionalProductsChosen.stream().
+		//filter(op -> request.getParameter(op) != null /*&& request.getParameter(op).equals("on")*/).
+		//toList();
 		
 		// store the optional products chosen
 		
