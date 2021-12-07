@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 
 import it.polimi.db2.HTMLhelper.HTMLPrinter;
 import it.polimi.db2.entities.OptionalProduct;
+import it.polimi.db2.entities.Order;
 import it.polimi.db2.entities.Package;
 import it.polimi.db2.entities.User;
 import it.polimi.db2.exceptions.OrderException;
@@ -61,9 +63,24 @@ public class GoToConfirmationPage extends HttpServlet {
 		List<OptionalProduct> optionalProductsChosen = null;
 		Date startDate = null;
 		
-		// when the user has already done the buy service process
+		String resumedOrder = null;
 		
 		try {
+			
+			//come si piglia la stringa dell'ordine fallito da riprendere unn nu sacciu
+			
+			/*System.out.println(request.getSession());
+			resumedOrder = (String) request.getSession().getAttribute("FailedOrders");
+			if(resumedOrder!= null)
+					
+			System.out.println(resumedOrder);*/
+			
+			// avendo la stringa si risale all'ordine.......
+			
+		
+			
+			// when the user has already done the buy service process
+		
 			request.getSession().setAttribute("confirmationFlag", true);
 			
 			// get the package chosen by the user (we assume that if the user has arrived here it is because he have already selected the package)
@@ -155,7 +172,28 @@ public class GoToConfirmationPage extends HttpServlet {
 			
 			try {
 				
-				new HTMLPrinter(response.getWriter(), "HomePage").printHomePage(errorMessage, packageManager.getPackages(), user.getUsername());
+				int userId = (int) request.getSession().getAttribute("userId");
+				
+				List<String> failedOrders = new ArrayList<>();
+				
+				boolean isInsolvent = userManager.findById(userId).isInsolvent();
+				
+				if (isInsolvent) {
+					
+					//get the list of orders associated with the user of this session IF exists
+					
+					Collection<Order> orders = userManager.findById(userId).getOrders();
+					
+					for(Order order: orders) {
+						
+						if (!order.isValid()) 
+							
+							failedOrders.add(String.valueOf(order.getOrderid()));
+						
+					}
+				}
+				
+				new HTMLPrinter(response.getWriter(), "HomePage").printHomePage(errorMessage, packageManager.getPackages(), user.getUsername(), failedOrders);
 				
 			} catch (IOException | PackagesNotFoundException e1) {
 				

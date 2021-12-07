@@ -3,6 +3,7 @@ package it.polimi.db2.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -49,6 +50,7 @@ public class GoToHomePage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		List <Package> packages = new ArrayList<>();
+		List<String> failedOrders = new ArrayList<>();
 		
 		
 		try {
@@ -62,12 +64,13 @@ public class GoToHomePage extends HttpServlet {
 			
 			e.printStackTrace();
 			
-			printPage("Something bad happened: " + e.getMessage(), response.getWriter(), packages, null);
+			printPage("Something bad happened: " + e.getMessage(), response.getWriter(), packages, null, null);
 			
 		}
 		
 		int userId;
 		String username;
+		
 		
 		try {
 			
@@ -79,6 +82,27 @@ public class GoToHomePage extends HttpServlet {
 			
 			username = userManager.findById(userId).getUsername();
 			
+			// get the attribute isInsolvent associated with the user of this session IF exists
+			
+			boolean isInsolvent = userManager.findById(userId).isInsolvent();
+			
+			if (isInsolvent) {
+				
+				//get the list of orders associated with the user of this session IF exists
+				
+				Collection<Order> orders = userManager.findById(userId).getOrders();
+				
+				for(Order order: orders) {
+					
+					if (!order.isValid()) 
+						failedOrders.add(String.valueOf(order.getOrderid()));
+					
+					System.out.println(failedOrders);
+					
+				}
+			}
+				
+			
 		}catch(NullPointerException e) {
 			
 			// the user didn't login
@@ -88,7 +112,7 @@ public class GoToHomePage extends HttpServlet {
 
 		// print the home page, showing the packages and eventually the username
 		
-		printPage("", response.getWriter(), packages, username);
+		printPage("", response.getWriter(), packages, username, failedOrders);
 		
 		// set the confirmation flag to false, it means that if the user goes to the login page, this page here will be the next one
 		
@@ -111,9 +135,9 @@ public class GoToHomePage extends HttpServlet {
 	}
 	
 	
-	private void printPage(String errorMessage, @NotNull PrintWriter out, List<Package> packages, String username) {
+	private void printPage(String errorMessage, @NotNull PrintWriter out, List<Package> packages, String username, List<String> failedOrders) {
 	
-		new HTMLPrinter(out, "HomePage").printHomePage(errorMessage, packages, username);
+		new HTMLPrinter(out, "HomePage").printHomePage(errorMessage, packages, username, failedOrders);
 	}
 	
 

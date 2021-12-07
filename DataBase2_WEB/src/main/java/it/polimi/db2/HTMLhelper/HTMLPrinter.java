@@ -77,7 +77,7 @@ public class HTMLPrinter {
 		return new Form("GoToHomePage", "GET", "", new ArrayList<FormInstance>(), "Home Page");
 	}
 	
-	public void printHomePage(String homePageError, List<Package> packages, String username) {
+	public void printHomePage(String homePageError, List<Package> packages, String username, List<String> failedOrders) {
 		printHeader();
 		out.println("<body>");
 		out.println("<h1>here they are our packages, if you want to pursue an order press the button Buy Service </h1>");
@@ -113,7 +113,43 @@ public class HTMLPrinter {
 			out.println(p.toString());
 			out.print("</li>");
 		}
+		
 		out.println("</ul>");
+		
+		if (failedOrders != null) {
+			out.println("<b><br> Failed Orders </br> </b>");
+			
+			List<FormInstance> failedOrdersInstances = new ArrayList<>();
+			
+			for(String s : failedOrders) {
+				failedOrdersInstances.add(new FormInstance("Orderid:" + s.toString() ,"radio", "FailedOrders", s.toString() + ""));
+			}
+			
+			out.println(new Form("GoToConfirmationPage", "GET", " ", failedOrdersInstances, "choose"));
+			
+			
+			/*out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
+			String creationOptions = "<label for=\"resumeOrder\">Choose what order you want to resume:</label>\r\n"
+					+ "		  <select name=\"resumeOrder\">\r\n"
+					
+					
+					
+					+ "		    <option value=\"PACKAGE\">Package</option>\r\n"
+					+ "		    <option value=\"OPTIONALPRODUCT\">Optional Product</option>\r\n"
+					+ "		    <option value=\"MOBILEPHONE\">Mobile phone service</option>\r\n"
+					+ "		    <option value=\"FIXEDINTERNET\">Fixed internet service</option>\r\n"
+					+ "		    <option value=\"MOBILEINTERNET\">Mobile internet service</option>\r\n"
+					
+					
+					
+					+ "		  </select>";
+			out.println(creationOptions);
+			out.println("<input type=\"submit\" value=\"Submit\">");
+			out.println("</form>");*/
+		}
+		
+		
+		
 		out.println("</body>");
 		out.println("</html>");
 	}
