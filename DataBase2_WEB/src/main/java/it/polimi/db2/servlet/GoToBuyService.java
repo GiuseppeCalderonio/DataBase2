@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import it.polimi.db2.HTMLhelper.HTMLPrinter;
 import it.polimi.db2.entities.OptionalProduct;
+import it.polimi.db2.entities.Order;
 import it.polimi.db2.entities.Package;
 import it.polimi.db2.exceptions.PackagesNotFoundException;
 import it.polimi.db2.jee.stateless.PackageManager;

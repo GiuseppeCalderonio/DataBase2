@@ -117,6 +117,9 @@ public class GoToConfirmationPage extends HttpServlet {
 			
 		} catch(NullPointerException e) { // user didn't the process right [birbantello]
 			
+			// for debugging purposes
+			e.printStackTrace();
+			
 			response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
 			
 		}
@@ -139,6 +142,26 @@ public class GoToConfirmationPage extends HttpServlet {
 		User user = userManager.findById((int)request.getSession().getAttribute("userId"));
 		
 		try {
+			
+			if(request.getSession().getAttribute("orderId") != null){
+				
+				int orderId = (int)request.getSession().getAttribute("orderId");
+				String validity = request.getParameter("payment");
+				boolean isValid = validity.equals("true");
+				
+				orderManager.updateOrder(orderId, isValid);
+				
+				deleteAttributes(request);
+				
+				String path = getServletContext().getContextPath() + "/GoToHomePage";
+				response.sendRedirect(path);
+				
+				return;
+				
+			}
+			
+			
+			
 			
 			// get the package chosen by the user (we assume that if the user has arrived here it is because he have already selected the package)
 			
@@ -224,6 +247,7 @@ public class GoToConfirmationPage extends HttpServlet {
 		request.getSession().removeAttribute("validityPeriod");
 		request.getSession().removeAttribute("startDate");
 		request.getSession().removeAttribute("optionalProductsChosen");
+		request.getSession().removeAttribute("orderId");
 		
 		// ["userId", "confirmationFlag"]
 	}

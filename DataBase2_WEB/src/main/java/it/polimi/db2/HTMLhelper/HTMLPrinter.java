@@ -125,7 +125,7 @@ public class HTMLPrinter {
 				failedOrdersInstances.add(new FormInstance("Orderid:" + s.toString() ,"radio", "FailedOrders", s.toString() + ""));
 			}
 			
-			out.println(new Form("GoToConfirmationPage", "GET", " ", failedOrdersInstances, "choose"));
+			out.println(new Form("GoToHomePage", "POST", " ", failedOrdersInstances, "choose"));
 			
 			
 			/*out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");

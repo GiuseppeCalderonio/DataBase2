@@ -207,4 +207,13 @@ public class Order implements Serializable{
 		return totalValue * validityPeriod;
 	}
 
+	@Override
+	public String toString() {
+		return "Order [orderid=" + orderid + ", user=" + user + ", pack=" + pack + ", date=" + date + ", startDate="
+				+ startDate + ", time=" + time + ", isValid=" + isValid + ", validityPeriod=" + validityPeriod
+				+ ", fee=" + fee + ", optionalProducts=" + optionalProducts + "]";
+	}
+	
+	
+
 }

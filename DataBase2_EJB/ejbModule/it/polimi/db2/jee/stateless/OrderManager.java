@@ -57,6 +57,15 @@ public class OrderManager {
 		
 	}
 	
+	public void updateOrder(int orderId, boolean isValid) {
+		Order toModify = em.find(Order.class, orderId);
+		toModify.setValid(isValid);
+	}
+	
+	public Order getOrder(int orderId) {
+		return em.find(Order.class, orderId);
+	}
+	
 	private Date getTodayDate() throws ParseException {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		

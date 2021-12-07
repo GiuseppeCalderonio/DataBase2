@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.persistence.PersistenceException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull;
 
 import it.polimi.db2.HTMLhelper.HTMLPrinter;
 import it.polimi.db2.exceptions.PackagesNotFoundException;
+import it.polimi.db2.jee.stateless.OrderManager;
 import it.polimi.db2.jee.stateless.PackageManager;
 import it.polimi.db2.jee.stateless.UserManager;
 import it.polimi.db2.entities.*;
@@ -34,6 +36,9 @@ public class GoToHomePage extends HttpServlet {
 	
 	@EJB(name = "it.polimi.db2.jee.stateless/UserManager")
 	private UserManager userManager;
+	
+	@EJB(name = "it.polimi.db2.jee.stateless/OrderManager")
+	private OrderManager orderManager;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -129,9 +134,36 @@ public class GoToHomePage extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// not used
+		// lists of session attributes
+		// 1) ["userId", "confirmationFlag"]
 		
-		doGet(request, response);
+		System.out.println("HOME PAGE POST");
+		
+		try {
+			
+			int orderId = Integer.parseInt(request.getParameter("FailedOrders"));
+			Order order = orderManager.getOrder(orderId);
+			
+			request.getSession().setAttribute("packageid", order.getPackage().getPackageid());
+			request.getSession().setAttribute("validityPeriod", order.getValidityPeriod());
+			request.getSession().setAttribute("startDate", order.getStartDate());
+			request.getSession().setAttribute("optionalProductsChosen", order.getOptionalProducts().stream().map(op -> op.getName()).toList());
+			request.getSession().setAttribute("orderId", order.getOrderid());
+			
+			
+			// 1) WITH LOGIN ["userId", "confirmationFlag", "packageid", "validityPeriod", "startDate", "optionalProductsChosen", "orderId"]
+			
+			String path = getServletContext().getContextPath() + "/GoToConfirmationPage";
+			response.sendRedirect(path);
+			
+			
+		}catch(NullPointerException | PersistenceException | NumberFormatException e) {
+			e.printStackTrace();
+			doGet(request, response);
+		}
+		
+		
+		
 	}
 	
 	
