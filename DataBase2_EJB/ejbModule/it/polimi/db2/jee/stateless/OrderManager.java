@@ -40,18 +40,20 @@ public class OrderManager {
 		order.setTime(getTodayTime());
 		order.setValid(isValid);
 		order.setValidityPeriod(validityPeriod);
-		order.setFee(getFee(pack, validityPeriod));
-		
+		order.setFee(getFee(pack, validityPeriod, optionalProducts));
+		order.setPackage_fee(pack.getFee(validityPeriod) * validityPeriod);		
 		
 		
 		
 		try {
 			em.persist(order);
+			// update the user state such that now he can be marked as insolvent if the order fails
+			user = em.find(User.class, user.getUserid());
 		}catch(PersistenceException e) {
 			
 			e.printStackTrace();
 			
-			throw new OrderException("The order was not created correctly");
+			throw new OrderException("The order was not created correctly // the user was not updated correctly");
 		}
 		
 		
@@ -66,6 +68,13 @@ public class OrderManager {
 		return em.find(Order.class, orderId);
 	}
 	
+	public List<Integer> getInsolventOrdersOf(int userId){
+		
+		return em.createNamedQuery("getInsolventOrdersOf").
+				setParameter("user", em.find(User.class, userId)).
+				getResultList();
+	}
+	
 	private Date getTodayDate() throws ParseException {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		
@@ -77,8 +86,14 @@ public class OrderManager {
 		return new Time(System.currentTimeMillis());
 	}
 	
-	private int getFee(Package pack, int validityPeriod) {
-		return pack.getFee(validityPeriod);
+	private int getFee(Package pack, int validityPeriod, List<OptionalProduct> optionalProducts) {
+		int amount = 0;
+		amount = amount + pack.getFee(validityPeriod);
+		for(OptionalProduct op : optionalProducts) {
+			amount = amount + op.getFee();
+		}
+		
+		return amount * validityPeriod;
 	}
 
 }

@@ -32,10 +32,7 @@ public class OptionalProduct implements Serializable{
 	
 	private int fee;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name="choose",
-	joinColumns=@JoinColumn(name="name"),
-	inverseJoinColumns=@JoinColumn(name="orderid"))
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "optionalProducts")
 	private Collection<Order> orders;
 	
 	@ManyToMany(fetch = FetchType.LAZY,

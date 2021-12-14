@@ -54,6 +54,8 @@ public class GoToHomePage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		System.out.println("GOTOHOMEPAGE GET");
+		
 		List <Package> packages = new ArrayList<>();
 		List<String> failedOrders = new ArrayList<>();
 		
@@ -63,6 +65,7 @@ public class GoToHomePage extends HttpServlet {
 			// get all the packages available
 			
 			 packages = packageManager.getPackages();
+			 
 		} catch (PackagesNotFoundException e) {
 			
 			// something bad happened
@@ -87,25 +90,9 @@ public class GoToHomePage extends HttpServlet {
 			
 			username = userManager.findById(userId).getUsername();
 			
-			// get the attribute isInsolvent associated with the user of this session IF exists
-			
-			boolean isInsolvent = userManager.findById(userId).isInsolvent();
-			
-			if (isInsolvent) {
+			//get the list of orders associated with the user of this session IF exists
 				
-				//get the list of orders associated with the user of this session IF exists
-				
-				Collection<Order> orders = userManager.findById(userId).getOrders();
-				
-				for(Order order: orders) {
-					
-					if (!order.isValid()) 
-						failedOrders.add(String.valueOf(order.getOrderid()));
-					
-					System.out.println(failedOrders);
-					
-				}
-			}
+			failedOrders = orderManager.getInsolventOrdersOf(userId).stream().map(order -> String.valueOf(order) ).toList();
 				
 			
 		}catch(NullPointerException e) {
@@ -121,7 +108,7 @@ public class GoToHomePage extends HttpServlet {
 		
 		// set the confirmation flag to false, it means that if the user goes to the login page, this page here will be the next one
 		
-		request.setAttribute("confirmationFlag", false);
+		request.getSession().removeAttribute("confirmationFlag");
 		
 		// from now there are two possible lists of session attributes
 		// 1) ["userId", "confirmationFlag"]

@@ -56,6 +56,8 @@ public class GoToConfirmationPage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		System.out.println("GOTOCONFIRMANTIONPAGE GET");
+		
 		// ["userId", "confirmationFlag", "packageid", "validityPeriod", "startDate", "optionalProductsChosen"]
 		
 		Package packageChosen = null;
@@ -66,19 +68,7 @@ public class GoToConfirmationPage extends HttpServlet {
 		String resumedOrder = null;
 		
 		try {
-			
-			//come si piglia la stringa dell'ordine fallito da riprendere unn nu sacciu
-			
-			/*System.out.println(request.getSession());
-			resumedOrder = (String) request.getSession().getAttribute("FailedOrders");
-			if(resumedOrder!= null)
-					
-			System.out.println(resumedOrder);*/
-			
-			// avendo la stringa si risale all'ordine.......
-			
-		
-			
+				
 			// when the user has already done the buy service process
 		
 			request.getSession().setAttribute("confirmationFlag", true);
@@ -98,6 +88,7 @@ public class GoToConfirmationPage extends HttpServlet {
 			// get the optional Products chosen
 			
 			List<String> optionalPorductsNames = (List<String>) request.getSession().getAttribute("optionalProductsChosen");
+						
 			optionalProductsChosen = optionalPorductsNames.stream().map(opName -> packageManager.getOptionalProduct(opName)).toList();
 			
 			// verify if the user has logged in
@@ -189,32 +180,20 @@ public class GoToConfirmationPage extends HttpServlet {
 			
 			deleteAttributes(request);
 			
-		} catch (ParseException | OrderException e) {
+		} catch (ParseException | OrderException | NullPointerException e) {
 			
-			errorMessage = e.getMessage();
+			errorMessage = "errore nel caricamento della pagina";
 			
 			try {
 				
 				int userId = (int) request.getSession().getAttribute("userId");
 				
 				List<String> failedOrders = new ArrayList<>();
+					
+				//get the list of orders associated with the user of this session IF exists
+					
+				failedOrders = orderManager.getInsolventOrdersOf(userId).stream().map(order -> String.valueOf(order) ).toList();
 				
-				boolean isInsolvent = userManager.findById(userId).isInsolvent();
-				
-				if (isInsolvent) {
-					
-					//get the list of orders associated with the user of this session IF exists
-					
-					Collection<Order> orders = userManager.findById(userId).getOrders();
-					
-					for(Order order: orders) {
-						
-						if (!order.isValid()) 
-							
-							failedOrders.add(String.valueOf(order.getOrderid()));
-						
-					}
-				}
 				
 				new HTMLPrinter(response.getWriter(), "HomePage").printHomePage(errorMessage, packageManager.getPackages(), user.getUsername(), failedOrders);
 				

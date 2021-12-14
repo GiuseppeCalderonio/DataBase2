@@ -116,7 +116,7 @@ public class HTMLPrinter {
 		
 		out.println("</ul>");
 		
-		if (failedOrders != null) {
+		if (!failedOrders.isEmpty()) {
 			out.println("<b><br> Failed Orders </br> </b>");
 			
 			List<FormInstance> failedOrdersInstances = new ArrayList<>();
@@ -127,25 +127,6 @@ public class HTMLPrinter {
 			
 			out.println(new Form("GoToHomePage", "POST", " ", failedOrdersInstances, "choose"));
 			
-			
-			/*out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
-			String creationOptions = "<label for=\"resumeOrder\">Choose what order you want to resume:</label>\r\n"
-					+ "		  <select name=\"resumeOrder\">\r\n"
-					
-					
-					
-					+ "		    <option value=\"PACKAGE\">Package</option>\r\n"
-					+ "		    <option value=\"OPTIONALPRODUCT\">Optional Product</option>\r\n"
-					+ "		    <option value=\"MOBILEPHONE\">Mobile phone service</option>\r\n"
-					+ "		    <option value=\"FIXEDINTERNET\">Fixed internet service</option>\r\n"
-					+ "		    <option value=\"MOBILEINTERNET\">Mobile internet service</option>\r\n"
-					
-					
-					
-					+ "		  </select>";
-			out.println(creationOptions);
-			out.println("<input type=\"submit\" value=\"Submit\">");
-			out.println("</form>");*/
 		}
 		
 		
@@ -284,6 +265,8 @@ public class HTMLPrinter {
 		
 		Form goToLogin = new Form("LoginServlet", "GET", "", null, toShow);
 		out.println(goToLogin.toString() + "<br>");
+		
+		out.println("<h3>" + errorMessage + "</h3>");
 		
 		////////////////////////////////////////////////////
 		

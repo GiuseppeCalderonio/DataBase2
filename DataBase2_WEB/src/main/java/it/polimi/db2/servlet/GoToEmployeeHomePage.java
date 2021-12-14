@@ -175,7 +175,7 @@ public class GoToEmployeeHomePage extends HttpServlet {
 				fixedPhoneServices.addAll(employeeManager.getFixedPhoneServices());
 				mobilePhoneServices.addAll(employeeManager.getMobilePhoneServices());
 				
-			} catch (OptinalProductsNotFoundException | ServiceNotFoundException e) {
+			} catch (OptinalProductsNotFoundException | ServiceNotFoundException | NullPointerException e) {
 				// problems
 				e.printStackTrace();
 				errorMessage = e.getMessage();

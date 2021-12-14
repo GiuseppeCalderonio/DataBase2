@@ -30,12 +30,8 @@ public class PackageManager {
 			e.printStackTrace();
 			throw new PackagesNotFoundException("Could not retrieve packages");
 		}
-		if (packagesList.isEmpty())
-			return null;
-		else {
 		
-			return packagesList;
-		}
+		return packagesList;
 	
 	}
 	

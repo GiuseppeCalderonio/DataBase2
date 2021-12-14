@@ -30,14 +30,10 @@ public class EmployeeManager {
 			optionalProducts = em.createNamedQuery("getOptionalProducts", OptionalProduct.class).getResultList();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
-			throw new OptinalProductsNotFoundException("Could not retrieve packages");
+			throw new OptinalProductsNotFoundException("Could not retrieve optional products");
 		}
-		if (optionalProducts.isEmpty())
-			return null;
-		else {
-		
-			return optionalProducts;
-		}
+
+		return optionalProducts;
 	
 	}
 	

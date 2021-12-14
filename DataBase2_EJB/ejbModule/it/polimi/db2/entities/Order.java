@@ -13,8 +13,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -28,6 +30,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "db2project.order")
+@NamedQuery(name = "getInsolventOrdersOf",
+query = "SELECT o.orderid FROM Order o WHERE o.isValid = false AND o.user = :user")
 public class Order implements Serializable{
 	
 	/**
@@ -90,16 +94,25 @@ public class Order implements Serializable{
 	
 	private int fee;
 	
+	private int package_fee;
+	
+	/**
+	 * this attribute represents the number of optional products chosen among all the 
+	 * ones available from the service package purchased 
+	 * basically optional_chosen = optionalProducts.size();
+	 */
+	private int optional_chosen;
+	
 	/**
 	 * this attribute represents the optional products associated with the package,
 	 * it has an eager fetch type because in the majority of cases, fetching an order
 	 * implies to fetch all the details too, and also because it is assumed to have
 	 * a small number of optional products
-	 * it has a persist cascade type because, when an order is created, it updates also
-	 * the collections of the optional products holding a reference to all the orders
-	 * which use it
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "orders")
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name="choose",
+	joinColumns=@JoinColumn(name="orderid"),
+	inverseJoinColumns=@JoinColumn(name="name"))
 	private Collection<OptionalProduct> optionalProducts;
 
 	public int getOrderid() {
@@ -181,12 +194,21 @@ public class Order implements Serializable{
 		this.fee = fee;
 	}
 
+	public int getPackage_fee() {
+		return package_fee;
+	}
+
+	public void setPackage_fee(int package_fee) {
+		this.package_fee = package_fee;
+	}
+
 	public Collection<OptionalProduct> getOptionalProducts() {
 		return optionalProducts;
 	}
 
 	public void setOptionalProducts(Collection<OptionalProduct> optionalProducts) {
 		this.optionalProducts = optionalProducts;
+		this.optional_chosen = optionalProducts.size();
 		for(OptionalProduct op : optionalProducts) {
 			op.addOrder(this);
 		}
