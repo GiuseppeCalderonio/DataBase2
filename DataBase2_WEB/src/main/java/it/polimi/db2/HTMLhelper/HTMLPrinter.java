@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import it.polimi.db2.entities.*;
+import it.polimi.db2.entities.materializedViews.*;
 import it.polimi.db2.entities.Package;
 import it.polimi.db2.Creation;
 import it.polimi.db2.Service;
@@ -268,6 +269,8 @@ public class HTMLPrinter {
 		
 		out.println("<h3>" + errorMessage + "</h3>");
 		
+		out.println(new Form("SalesReportPage", "GET", "", null, "Sales Report Page"));
+		
 		////////////////////////////////////////////////////
 		
 		out.println("<form action = \"GoToEmployeeHomePage\" method = \"GET\">");
@@ -449,7 +452,141 @@ public class HTMLPrinter {
 		out.println(new Form("PackageCreation", "POST", errorMessage, packageInstances, "create"));
 		
 	}
+	
+	
+	public void printSalesReportPage(String errorMessage,
+			List<MaterializedView1> mv1,
+			List<MaterializedView2> mv2,
+			List<MaterializedView3> mv3,
+			List<MaterializedView4> mv4,
+			MaterializedView6 bestSeller,
+			List<MaterializedView5Insolvents> mv5Insolvents,
+			List<MaterializedView5Suspended> mv5Suspended,
+			List<AuditingTable> alerts) {
+		printHeader();
+		out.println("<body>");
+		
+		// print a general introduction of the page
+		
+		out.println("<h1>Welcome, this is the page in which you can see the sales reports</h1>");
+		
+		// print a form to redirect the employee to the previous page
+		
+		out.println(new Form("GoToEmployeeHomePage", "GET", errorMessage, null, "Go Back"));
+		
+		// if there is an error, print it and avoid to print the rest because probably
+		// it won't be visible, the error indeed comes from the ejb class which retreives the tuples
+		if(!errorMessage.equals("")) {
+			out.println("Error, " + errorMessage );
+			out.println("</body>");
+			out.println("</html>");
+			return;
+		}
+		
+		// print the first materialized view, Number of total purchases per package
+
+		out.println("<h3>Number of total purchases per package</h3> <br>");
+		
+		out.println("<ul>");
+		for(MaterializedView1 mv : mv1) {
+			out.print("<li>");
+			out.println(mv.toString());
+			out.print("</li>");
+		}
+		out.println("</ul>");
+		
+		// print the second materialized view, Number of total purchases per package and validity period
+
+		out.println("<h3> Number of total purchases per package and validity period</h3> <br>");
+				
+		out.println("<ul>");
+		for(MaterializedView2 mv : mv2) {
+			out.print("<li>");
+			out.println(mv.toString());
+			out.print("</li>");
+		}
+		out.println("</ul>");
+		
+		// print the third materialized view, Total value of sales per package with and without the optional products
+
+		out.println("<h3>  Total value of sales per package with and without the optional products</h3> <br>");
+						
+		out.println("<ul>");
+		for(MaterializedView3 mv : mv3) {
+			out.print("<li>");
+			out.println(mv.toString());
+			out.print("</li>");
+		}
+		out.println("</ul>");
+				
+		// print the fourth materialized view,  Average number of optional products sold together with each service package
+
+		out.println("<h3> Average number of optional products sold together with each service package</h3> <br>");
+								
+		out.println("<ul>");
+		for(MaterializedView4 mv : mv4) {
+			out.print("<li>");
+			out.println(mv.toString());
+			out.print("</li>");
+		}
+		out.println("</ul>");
+		
+		// print the fifth materialized view first part,  List of insolvent users
+		
+		out.println("<h3> List of insolvent users</h3> <br>");
+		
+		out.println("<ul>");
+		for(MaterializedView5Insolvents mv : mv5Insolvents) {
+			out.print("<li>");
+			out.println(mv.toString());
+			out.print("</li>");
+		}
+		out.println("</ul>");
+		
+		
+		// print the fifth materialized view second part,  List of suspended orders
+		
+		out.println("<h3> List of suspended orders</h3> <br>");
+		
+		out.println("<ul>");
+		for(MaterializedView5Suspended mv : mv5Suspended) {
+			out.print("<li>");
+			out.println(mv.toString());
+			out.print("</li>");
+		}
+		out.println("</ul>");
+		
+		// print the fifth materialized view third part,  List of alerts
+		
+		out.println("<h3> List of alerts</h3> <br>");
+		
+		out.println("<ul>");
+		for(AuditingTable a : alerts) {
+			out.print("<li>");
+			out.println(a.toString());
+			out.print("</li>");
+		}
+		out.println("</ul>");
+		
+		
+		// print the sixth materialized view, best seller optional product
+		
+		if(bestSeller != null) {
+			out.println("<h3> Best seller optional product</h3> <br>");
+			out.println(bestSeller.toString());	
+		}
+		
+
+		
+		
+		
+		out.println("</body>");
+		out.println("</html>");
 	}
+	
+	
+	
+}
 		
 	
 

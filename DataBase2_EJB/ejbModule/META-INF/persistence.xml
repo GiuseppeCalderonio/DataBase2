@@ -12,6 +12,14 @@
 			<class>it.polimi.db2.entities.Order</class>
 			<class>it.polimi.db2.entities.Package</class>
 			<class>it.polimi.db2.entities.User</class>
+			<class>it.polimi.db2.entities.materializedViews.MaterializedView1</class>
+			<class>it.polimi.db2.entities.materializedViews.MaterializedView3</class>
+			<class>it.polimi.db2.entities.materializedViews.MaterializedView4</class>
+			<class>it.polimi.db2.entities.materializedViews.MaterializedView5Suspended</class>
+			<class>it.polimi.db2.entities.materializedViews.MaterializedView6</class>
+			<class>it.polimi.db2.entities.materializedViews.AuditingTable</class>
+			<class>it.polimi.db2.entities.materializedViews.MaterializedView2</class>
+			<class>it.polimi.db2.entities.materializedViews.MaterializedView5Insolvents</class>
 			
 			<properties>
 			
