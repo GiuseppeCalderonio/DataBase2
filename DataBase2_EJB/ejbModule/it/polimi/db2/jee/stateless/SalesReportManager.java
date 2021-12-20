@@ -36,7 +36,9 @@ public class SalesReportManager {
     	
     	List<AuditingTable> alerts = null;
 		try {
+			
 			alerts = em.createNamedQuery("AuditingTable.findAll", AuditingTable.class).getResultList();
+			
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");
@@ -48,7 +50,12 @@ public class SalesReportManager {
     	
     	List<MaterializedView1> materializedViewTuples = null;
 		try {
+			
+			// refresh the state from the db
 			materializedViewTuples = em.createNamedQuery("MaterializedView1.findAll", MaterializedView1.class).getResultList();
+			for(MaterializedView1 e : materializedViewTuples) {
+				em.refresh(e);
+			}
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");
@@ -61,6 +68,9 @@ public class SalesReportManager {
     	List<MaterializedView2> materializedViewTuples = null;
 		try {
 			materializedViewTuples = em.createNamedQuery("MaterializedView2.findAll", MaterializedView2.class).getResultList();
+			for(MaterializedView2 e : materializedViewTuples) {
+				em.refresh(e);
+			}
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");
@@ -73,6 +83,9 @@ public class SalesReportManager {
 		List<MaterializedView3> materializedViewTuples = null;
 		try {
 			materializedViewTuples = em.createNamedQuery("MaterializedView3.findAll", MaterializedView3.class).getResultList();
+			for(MaterializedView3 e : materializedViewTuples) {
+				em.refresh(e);
+			}
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");
@@ -85,6 +98,9 @@ public class SalesReportManager {
 		List<MaterializedView4> materializedViewTuples = null;
 		try {
 			materializedViewTuples = em.createNamedQuery("MaterializedView4.findAll", MaterializedView4.class).getResultList();
+			for(MaterializedView4 e : materializedViewTuples) {
+				em.refresh(e);
+			}
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");
@@ -97,6 +113,9 @@ public class SalesReportManager {
 		List<MaterializedView6> materializedViewTuples = null;
 		try {
 			materializedViewTuples = em.createNamedQuery("MaterializedView6.findAll", MaterializedView6.class).getResultList();
+			for(MaterializedView6 e : materializedViewTuples) {
+				em.refresh(e);
+			}
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");

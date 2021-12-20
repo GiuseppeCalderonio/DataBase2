@@ -41,7 +41,6 @@ public class User implements Serializable{
 	private int failedPayments;
 	
 	@OneToMany(fetch = FetchType.EAGER,
-			cascade = {CascadeType.REMOVE, CascadeType.MERGE},
 			mappedBy = "user")
 	@OrderBy("date DESC")
 	private Collection<Order> orders;

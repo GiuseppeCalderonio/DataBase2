@@ -47,8 +47,6 @@ public class OrderManager {
 		
 		try {
 			em.persist(order);
-			// update the user state such that now he can be marked as insolvent if the order fails
-			user = em.find(User.class, user.getUserid());
 		}catch(PersistenceException e) {
 			
 			e.printStackTrace();

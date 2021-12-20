@@ -115,7 +115,6 @@ public class SalesReportPage extends HttpServlet {
 		}catch (PersistenceException e) {
 			e.printStackTrace();
 			errorMessage = e.getMessage();
-			// dosomething
 		}
 		
 		printPage(out, errorMessage, mv1, mv2, mv3, mv4, bestSeller, mv5Insolvents, mv5Suspended, alerts);

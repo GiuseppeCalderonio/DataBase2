@@ -106,7 +106,7 @@ public class GoToHomePage extends HttpServlet {
 		
 		printPage("", response.getWriter(), packages, username, failedOrders);
 		
-		// set the confirmation flag to false, it means that if the user goes to the login page, this page here will be the next one
+		// delete the confirmation flag, it means that if the user goes to the login page, this page here will be the next one
 		
 		request.getSession().removeAttribute("confirmationFlag");
 		
