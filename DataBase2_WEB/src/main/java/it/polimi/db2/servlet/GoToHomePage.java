@@ -90,6 +90,17 @@ public class GoToHomePage extends HttpServlet {
 			
 			username = userManager.findById(userId).getUsername();
 			
+			// verify if the user is employee
+			
+			if(userManager.findById(userId).isEmployee()) {
+				
+				// come back to login page
+				
+				String path = getServletContext().getContextPath() + "/LoginServlet";
+				response.sendRedirect(path);
+				return;
+			}
+			
 			//get the list of orders associated with the user of this session IF exists
 				
 			failedOrders = orderManager.getInsolventOrdersOf(userId).stream().map(order -> String.valueOf(order) ).toList();

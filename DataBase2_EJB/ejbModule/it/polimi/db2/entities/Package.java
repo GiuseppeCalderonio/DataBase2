@@ -66,6 +66,8 @@ public class Package implements Serializable{
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "mobile_internet_id")
 	private MobileInternet mobileInternetService;
+	
+	// methods
 
 	public int getPackageid() {
 		return packageid;

@@ -74,6 +74,10 @@ public class GoToEmployeeHomePage extends HttpServlet {
 			
 			username = userManager.findById(userId).getUsername();
 			
+			// verify if the user is employee
+			
+			if(!userManager.findById(userId).isEmployee()) throw new NullPointerException();
+			
 			}catch(NullPointerException e) {
 			
 			// the user didn't login

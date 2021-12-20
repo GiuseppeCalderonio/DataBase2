@@ -97,6 +97,18 @@ public class GoToConfirmationPage extends HttpServlet {
 			
 			try {
 				isLogged = userManager.findById((int)request.getSession().getAttribute("userId")) != null;
+				
+				// verify if the user is employee
+				
+				if(userManager.findById((int)request.getSession().getAttribute("userId")).isEmployee()) {
+					
+					// come back to login page
+					
+					String path = getServletContext().getContextPath() + "/LoginServlet";
+					response.sendRedirect(path);
+					return;
+				}
+				
 			}catch (NullPointerException e) {
 				isLogged = false;
 			}
