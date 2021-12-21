@@ -52,10 +52,8 @@ public class SalesReportManager {
 		try {
 			
 			// refresh the state from the db
-			materializedViewTuples = em.createNamedQuery("MaterializedView1.findAll", MaterializedView1.class).getResultList();
-			for(MaterializedView1 e : materializedViewTuples) {
-				em.refresh(e);
-			}
+			materializedViewTuples = em.createNamedQuery("MaterializedView1.findAll", MaterializedView1.class).setHint("javax.persistence.cache.storeMode", "REFRESH").getResultList();
+			
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");
@@ -67,10 +65,8 @@ public class SalesReportManager {
     	
     	List<MaterializedView2> materializedViewTuples = null;
 		try {
-			materializedViewTuples = em.createNamedQuery("MaterializedView2.findAll", MaterializedView2.class).getResultList();
-			for(MaterializedView2 e : materializedViewTuples) {
-				em.refresh(e);
-			}
+			materializedViewTuples = em.createNamedQuery("MaterializedView2.findAll", MaterializedView2.class).setHint("javax.persistence.cache.storeMode", "REFRESH").getResultList();
+			
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");
@@ -82,10 +78,8 @@ public class SalesReportManager {
 	
 		List<MaterializedView3> materializedViewTuples = null;
 		try {
-			materializedViewTuples = em.createNamedQuery("MaterializedView3.findAll", MaterializedView3.class).getResultList();
-			for(MaterializedView3 e : materializedViewTuples) {
-				em.refresh(e);
-			}
+			materializedViewTuples = em.createNamedQuery("MaterializedView3.findAll", MaterializedView3.class).setHint("javax.persistence.cache.storeMode", "REFRESH").getResultList();
+			
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");
@@ -97,10 +91,8 @@ public class SalesReportManager {
 		
 		List<MaterializedView4> materializedViewTuples = null;
 		try {
-			materializedViewTuples = em.createNamedQuery("MaterializedView4.findAll", MaterializedView4.class).getResultList();
-			for(MaterializedView4 e : materializedViewTuples) {
-				em.refresh(e);
-			}
+			materializedViewTuples = em.createNamedQuery("MaterializedView4.findAll", MaterializedView4.class).setHint("javax.persistence.cache.storeMode", "REFRESH").getResultList();
+			
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");
@@ -110,23 +102,15 @@ public class SalesReportManager {
 
 	public MaterializedView6 getBestSellerOptionalProduct(){
 		
-		List<MaterializedView6> materializedViewTuples = null;
+		MaterializedView6 bestSeller = null;
 		try {
-			materializedViewTuples = em.createNamedQuery("MaterializedView6.findAll", MaterializedView6.class).getResultList();
-			for(MaterializedView6 e : materializedViewTuples) {
-				em.refresh(e);
-			}
+			bestSeller = em.createNamedQuery("getBestSeller", MaterializedView6.class).setHint("javax.persistence.cache.storeMode", "REFRESH").setMaxResults(1).getSingleResult();
+			
+			//em.refresh(bestSeller);
+			
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");
-		}
-		
-		if(materializedViewTuples.isEmpty()) return null;
-		
-		MaterializedView6 bestSeller = materializedViewTuples.get(0);
-		
-		for(MaterializedView6 mv6 : materializedViewTuples) {
-			if(mv6.getRevenue() > bestSeller.getRevenue()) bestSeller = mv6;
 		}
 		
 		return bestSeller;
