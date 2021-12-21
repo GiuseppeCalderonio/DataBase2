@@ -2,6 +2,7 @@ package it.polimi.db2.jee.stateless;
 
 import java.util.List;
 
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NonUniqueResultException;

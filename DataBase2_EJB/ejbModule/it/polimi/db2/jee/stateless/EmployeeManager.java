@@ -95,6 +95,7 @@ public class EmployeeManager {
 			int fee12,
 			int fee24,
 			int fee36) throws PersistenceException {
+		
 		Package pack = new Package();
 		pack.setName(name);
 		pack.setOptionalProducts(optionalProducts);

@@ -68,6 +68,7 @@ public class SalesReportPage extends HttpServlet {
 			
 			if(!userManager.findById(userId).isEmployee()) throw new NullPointerException();
 			
+			
 			}catch(NullPointerException e) {
 			
 			// the user didn't login

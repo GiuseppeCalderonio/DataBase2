@@ -172,13 +172,10 @@ public class PackageCreation extends HttpServlet {
 			printPage(response.getWriter(), "Service correctly created", username);
 			
 			
-		}catch (NumberFormatException |
-				NullPointerException |
-				PersistenceException |
-				OptinalProductsNotFoundException   e) {
+		}catch (Exception e) {
 			// somethong went wrong
 			
-			printPage(response.getWriter(), e.getMessage(), username);
+			printPage(response.getWriter(), "Something went wrong while creatig the package", username);
 		}
 	}
 	

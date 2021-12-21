@@ -182,7 +182,16 @@ public class GoToConfirmationPage extends HttpServlet {
 			// get the validity of the payment [positive or negative]
 			
 			String validity = request.getParameter("payment");
-			boolean isValid = validity.equals("true");
+			
+			// set the default to true if the user forgets about it
+			
+			boolean isValid = true;
+			try {
+				isValid = validity.equals("true");
+			} catch(NullPointerException e) {
+				isValid = true;
+			}
+			
 			
 			// get the validity period chosen by the user
 			

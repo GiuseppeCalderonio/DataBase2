@@ -107,10 +107,10 @@ public class OptionalProductCreation extends HttpServlet {
 			printPage(response.getWriter(), "Optional product correctly created", username);
 			
 			
-		}catch (NumberFormatException | NullPointerException | PersistenceException   e) {
+		}catch (Exception  e) {
 			// somethong went wrong
 			
-			printPage(response.getWriter(), e.getMessage(), username);
+			printPage(response.getWriter(), "Something went wrong while creating the optional products", username);
 		}
 		
 	}
