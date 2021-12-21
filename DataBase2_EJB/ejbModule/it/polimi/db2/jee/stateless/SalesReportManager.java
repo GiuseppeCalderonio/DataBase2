@@ -37,7 +37,7 @@ public class SalesReportManager {
     	List<AuditingTable> alerts = null;
 		try {
 			
-			alerts = em.createNamedQuery("AuditingTable.findAll", AuditingTable.class).getResultList();
+			alerts = em.createNamedQuery("AuditingTable.findAll", AuditingTable.class).setHint("javax.persistence.cache.storeMode", "REFRESH").getResultList();
 			
 		} catch (PersistenceException e) {
 			e.printStackTrace();
@@ -121,7 +121,7 @@ public class SalesReportManager {
 		
 		List<MaterializedView5Insolvents> materializedViewTuples = null;
 		try {
-			materializedViewTuples = em.createNamedQuery("MaterializedView5Insolvents.findAll", MaterializedView5Insolvents.class).getResultList();
+			materializedViewTuples = em.createNamedQuery("MaterializedView5Insolvents.findAll", MaterializedView5Insolvents.class).setHint("javax.persistence.cache.storeMode", "REFRESH").getResultList();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");
@@ -133,7 +133,7 @@ public class SalesReportManager {
 		
 		List<MaterializedView5Suspended> materializedViewTuples = null;
 		try {
-			materializedViewTuples = em.createNamedQuery("MaterializedView5Suspended.findAll", MaterializedView5Suspended.class).getResultList();
+			materializedViewTuples = em.createNamedQuery("MaterializedView5Suspended.findAll", MaterializedView5Suspended.class).setHint("javax.persistence.cache.storeMode", "REFRESH").getResultList();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 			throw new PersistenceException("Could not execute the query");

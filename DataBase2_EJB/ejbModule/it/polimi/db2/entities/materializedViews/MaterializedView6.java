@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="mv_query6")
 @NamedQuery(name="getBestSeller",
-query="SELECT bs FROM MaterializedView6 bs WHERE bs.revenue ="
+query="SELECT bestseller FROM MaterializedView6 bestseller WHERE bestseller.revenue ="
 		+ " (SELECT max(op.revenue) FROM MaterializedView6 op)")
 public class MaterializedView6 implements Serializable {
 	private static final long serialVersionUID = 1L;
