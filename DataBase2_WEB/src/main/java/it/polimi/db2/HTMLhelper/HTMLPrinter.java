@@ -39,7 +39,7 @@ public class HTMLPrinter {
 		printHeader();
 		out.println("<body>");
 		
-		out.println("<h1>Welcome to the Service Teleco Application</h1>");
+		out.println("<h1>Welcome to the Service Telco Application</h1>");
 		out.println(loginForm.toString());
 		out.println("<h1> Registration Form</h1>");
 		out.println(registrationForm.toString());
