@@ -88,7 +88,17 @@ public class HTMLPrinter {
 		String toShow = "Login";
 		
 		if(username != null) { // user logged in
+			
+			//out.println("<div style=\"position: relative; width: 700px;\">");
+			//out.println("<div style=\"position: absolute; top: 0; right: 0; width: 100px; text-align:right;\">");
+			
 			out.println("Hi " + username + "<br>");
+			
+			//out.println("</div>");
+			//out.println("</div>");
+			
+			
+			
 			toShow = "LogOut";
 		}
 			
@@ -136,10 +146,13 @@ public class HTMLPrinter {
 		out.println("</html>");
 	}
 	
-	public void printBuyServicePage(String errorMessage, List<Package> packages, Package packageChosen) {
+	public void printBuyServicePage(String errorMessage, List<Package> packages, Package packageChosen, String username) {
 		printHeader();
 		out.println("<body>");
 		out.println("<h1>Choose only one service from those available to buy it and fill the info </h1>");
+		if(username != null) {
+			out.println("Hi " + username);
+		}
 		
 		out.println("<form action = \"GoToBuyService\" method = \"GET\">");
 		out.println("<label for=\"Package\">Choose a Package:</label>");
@@ -182,10 +195,14 @@ public class HTMLPrinter {
 		out.println("</html>");
 	}
 	
-	public void printConfirmationPage(String errorMessage, Package packageChosen, int validityPeriod, List<OptionalProduct> optionalProductsChosen, Date startDate, boolean isLogged) {
+	public void printConfirmationPage(String errorMessage, Package packageChosen, int validityPeriod, List<OptionalProduct> optionalProductsChosen, Date startDate, boolean isLogged, String username) {
 		printHeader();
 		out.println("<body>");
 		out.println("<h1> That's a recap of what you chose, check if all the data are correct </h1>");
+		
+		if(username != null) {
+			out.println("Hi " + username);
+		}
 		
 		// print the package chosen
 		

@@ -25,6 +25,7 @@ import it.polimi.db2.entities.Order;
 import it.polimi.db2.entities.Package;
 import it.polimi.db2.exceptions.PackagesNotFoundException;
 import it.polimi.db2.jee.stateless.PackageManager;
+import it.polimi.db2.jee.stateless.UserManager;
 
 /**
  * Servlet implementation class GoToBuyService
@@ -37,6 +38,9 @@ public class GoToBuyService extends HttpServlet {
 	
 	@EJB(name = "it.polimi.db2.jee.stateless/PackageManager")
 	private PackageManager packageManager;
+	
+	@EJB(name = "it.polimi.db2.jee.stateless/UserManager" )
+	private UserManager userManager;
 	
        
     /**
@@ -55,6 +59,34 @@ public class GoToBuyService extends HttpServlet {
 		System.out.println("GOTOBUYSERVICEPAGE GET");
 		
 		List <Package> packages = new ArrayList<>();
+		
+		int userId;
+		String username = null;
+		
+		
+		try {
+			
+			// get the user id associated with the user of this session IF exists
+			
+			userId = (int) request.getSession().getAttribute("userId");
+			
+			// get the username associated with the user of this session IF exists
+			
+			username = userManager.findById(userId).getUsername();
+			
+			// verify if the user is employee
+			
+			if(userManager.findById(userId).isEmployee()) {
+				
+				// come back to login page
+				
+				String path = getServletContext().getContextPath() + "/LoginServlet";
+				response.sendRedirect(path);
+				return;
+			}
+			
+		} catch(NullPointerException e) {}
+		
 		
 		try {
 			
@@ -88,7 +120,7 @@ public class GoToBuyService extends HttpServlet {
 		
 		// print the page
 		
-		printPage("", response.getWriter(), packages, packageChosen);
+		printPage("", response.getWriter(), packages, packageChosen, username);
 		
 		// here we have two possibilities on the content of the attributes of the session:
 		// 1) WITH LOGIN ["userId", "confirmationFlag", "packageid"]
@@ -100,6 +132,35 @@ public class GoToBuyService extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		int userId;
+		String username = null;
+		
+		
+		try {
+			
+			// get the user id associated with the user of this session IF exists
+			
+			userId = (int) request.getSession().getAttribute("userId");
+			
+			// get the username associated with the user of this session IF exists
+			
+			username = userManager.findById(userId).getUsername();
+			
+			// verify if the user is employee
+			
+			if(userManager.findById(userId).isEmployee()) {
+				
+				// come back to login page
+				
+				String path = getServletContext().getContextPath() + "/LoginServlet";
+				response.sendRedirect(path);
+				return;
+			}
+			
+		} catch(NullPointerException e) {}
+		
 		
 		// retrieve the package chosen to see the available optional products names (keys)
 		
@@ -117,7 +178,7 @@ public class GoToBuyService extends HttpServlet {
 			
 			try {
 				
-				printPage(e.getMessage(), response.getWriter(), packageManager.getPackages(), packageChosen);
+				printPage(e.getMessage(), response.getWriter(), packageManager.getPackages(), packageChosen, username);
 				return;
 				
 			} catch (IOException | PackagesNotFoundException e1) {
@@ -172,9 +233,9 @@ public class GoToBuyService extends HttpServlet {
 	}
 
 	
-	private void printPage(String errorMessage, @NotNull PrintWriter out, List<Package> packages, Package packageChosen) {
+	private void printPage(String errorMessage, @NotNull PrintWriter out, List<Package> packages, Package packageChosen, String username) {
 		
-		new HTMLPrinter(out, "BuyServicePage").printBuyServicePage(errorMessage, packages, packageChosen);
+		new HTMLPrinter(out, "BuyServicePage").printBuyServicePage(errorMessage, packages, packageChosen, username);
 	}
 	
 	private Date translateInDate(String date) throws Exception {

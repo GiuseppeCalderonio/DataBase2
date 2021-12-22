@@ -94,9 +94,14 @@ public class GoToConfirmationPage extends HttpServlet {
 			// verify if the user has logged in
 			
 			boolean isLogged;
+			String username = null;
 			
 			try {
 				isLogged = userManager.findById((int)request.getSession().getAttribute("userId")) != null;
+				
+				// get the username of the user
+				
+				username = userManager.findById((int)request.getSession().getAttribute("userId")).getUsername();
 				
 				// verify if the user is employee
 				
@@ -111,12 +116,13 @@ public class GoToConfirmationPage extends HttpServlet {
 				
 			}catch (NullPointerException e) {
 				isLogged = false;
+				username = null;
 			}
 			
 			
 			// print the page with the info relative to the order to create
 			
-			printPage("", response.getWriter(), packageChosen, validityPeriod, optionalProductsChosen, startDate, isLogged);
+			printPage("", response.getWriter(), packageChosen, validityPeriod, optionalProductsChosen, startDate, isLogged, username);
 			
 		} catch(NullPointerException e) { // user didn't the process right [birbantello]
 			
@@ -233,9 +239,9 @@ public class GoToConfirmationPage extends HttpServlet {
 	
 	
 	private void printPage(String errorMessage, @NotNull PrintWriter out, Package packageChosen, int validityPeriod,
-			List<OptionalProduct> optionalProductsChosen, Date startDate, boolean isLogged) {
+			List<OptionalProduct> optionalProductsChosen, Date startDate, boolean isLogged, String username) {
 		
-		new HTMLPrinter(out, "ConfirmationPage").printConfirmationPage(errorMessage, packageChosen, validityPeriod, optionalProductsChosen , startDate, isLogged);
+		new HTMLPrinter(out, "ConfirmationPage").printConfirmationPage(errorMessage, packageChosen, validityPeriod, optionalProductsChosen , startDate, isLogged, username);
 		
 	}
 	
