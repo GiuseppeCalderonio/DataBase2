@@ -41,7 +41,7 @@ public class Package implements Serializable{
 	
 	private int fee36;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pack")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pack")
 	@OrderBy("date DESC")
 	private Collection<Order> orders;
 	
